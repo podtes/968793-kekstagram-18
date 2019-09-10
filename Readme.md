@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий](https://up.htmlacademy.ru/javascript/18/user/968793).
-* Наставник: `Неизвестно`.
+* Наставник: [Юрий Катков](https://htmlacademy.ru/profile/id473867).
 
 ---
 
