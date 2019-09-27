@@ -182,8 +182,8 @@ var photos = [
 
 /**
  * Функция генерирует DOM элемент на основе шаблона pictureTemplate
- * @param photo массив объектов с данными (моки)
- * @returns {Node} возвращает сгенерированный DOM элемент
+ * @param {[]} photo массив объектов с данными (моки)
+ * @return {Node} возвращает сгенерированный DOM элемент
  */
 var renderPhotos = function (photo) {
   var pictureElement = pictureTemplate.cloneNode(true);
