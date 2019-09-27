@@ -181,7 +181,7 @@ var photos = [
     likes: randomIntFromInterval(15, 200)
   }
 ];
-var avatar_number = 0;
+var avatarNumber = 0;
 /**
  * Функция генерирует DOM элемент на основе шаблона pictureTemplate
  * @param {[]} photo массив объектов с данными (моки)
@@ -189,7 +189,7 @@ var avatar_number = 0;
  */
 var renderPhotos = function (photo) {
   var pictureElement = pictureTemplate.cloneNode(true);
-  pictureElement.querySelector('.picture__img').src = './img/avatar-' + avatar_number + '.svg'; // или адрес изображения тоже нужно было как-то записывать в массив photos?
+  pictureElement.querySelector('.picture__img').src = './img/avatar-' + avatarNumber + '.svg'; // или адрес изображения тоже нужно было как-то записывать в массив photos?
   pictureElement.querySelector('.picture__likes').textContent = photo.likes;
   pictureElement.querySelector('.picture__comments').textContent = 2; // так ок?
 
@@ -203,9 +203,8 @@ var fragment = document.createDocumentFragment(); // не могу понять 
  */
 var getPhotosToIndex = function () {
   for (var i = 0; i < photos.length; i++) {
-    avatar_number ++;
+    avatarNumber++;
     fragment.appendChild(renderPhotos(photos[i]));
-    console.log(avatar_number);
   }
 };
 
