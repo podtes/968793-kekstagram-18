@@ -20,7 +20,9 @@ var getRandomValue = function (arrayName) {
   return randomValue;
 };
 
-var pictureTemplate = document.querySelector('#picture');
+var pictureTemplate = document.querySelector('#picture')
+  .content
+  .querySelector('.picture'); // хотелось бы подробнее разобрать эту запись и что по итогу мы записываем в переменную pictureTemplate?
 
 var AUTHOR_NAMES = ['Алексей', 'Дмитрий', 'Василий', 'Юрий', 'Бенджамин', 'Георгий', 'Юрий', 'Юлия', 'Мария', 'Валерия', 'Валерий', 'Евгений', 'Константин', 'Анна', 'Эдуард'];
 var AUTHOR_COMMENTS = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
@@ -179,7 +181,7 @@ var photos = [
     likes: randomIntFromInterval(15, 200)
   }
 ];
-
+var avatar_number = 0;
 /**
  * Функция генерирует DOM элемент на основе шаблона pictureTemplate
  * @param {[]} photo массив объектов с данными (моки)
@@ -187,18 +189,23 @@ var photos = [
  */
 var renderPhotos = function (photo) {
   var pictureElement = pictureTemplate.cloneNode(true);
-  // pictureElement.querySelector().src = // с этим надо бы разобраться, не понимаю как вставлять адреса картинок
-  pictureElement.querySelector('.picture__likes').textContent = photo.likes; // почему тут не получается использовать textContent?
-  pictureElement.querySelector('.picture__comments').textContent = 2;
+  pictureElement.querySelector('.picture__img').src = './img/avatar-' + avatar_number + '.svg'; // или адрес изображения тоже нужно было как-то записывать в массив photos?
+  pictureElement.querySelector('.picture__likes').textContent = photo.likes;
+  pictureElement.querySelector('.picture__comments').textContent = 2; // так ок?
 
   return pictureElement;
 };
 
-var fragment = document.createDocumentFragment(); // смысла добавлять через fragment не могу понять, если можно добавлять сгенерированный элемент pictureElement напрямую
+var fragment = document.createDocumentFragment(); // не могу понять зачем нужно использовать fragment и где он вообще находится?
 
+/**
+ * Функция перебирает массив photos и вставляет результат после fragment?
+ */
 var getPhotosToIndex = function () {
   for (var i = 0; i < photos.length; i++) {
+    avatar_number ++;
     fragment.appendChild(renderPhotos(photos[i]));
+    console.log(avatar_number);
   }
 };
 
