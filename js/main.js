@@ -125,16 +125,16 @@ var getValuesFromArrayElement = function (arrayElement) {
   // присваиваю ему адрес из photos[0]
   bigPictureImg.src = arrayElement.url;
 
-// переопределяю на лайки из photos[0]
+  // переопределяю на лайки из photos[0]
   likesCount.textContent = arrayElement.likes;
 
-// переопределяю ко-во комментариев на значение длины массива из ключа comments элемента photos[0]
+  // переопределяю ко-во комментариев на значение длины массива из ключа comments элемента photos[0]
   commentsCount.textContent = arrayElement.comments.length;
 
-// мняем текстовое сождержимое pictureDescription на значение ключа description в элементе photos[0]
+  // мняем текстовое сождержимое pictureDescription на значение ключа description в элементе photos[0]
   pictureDescription.textContent = arrayElement.description;
 
-// циклом перебираем коллекцию с комментариями и переопределяем аватарок комментариев, имен авторов и текста каждого комментария
+  // циклом перебираем коллекцию с комментариями и переопределяем аватарок комментариев, имен авторов и текста каждого комментария
   for (var i = 0; i < commentListItems.length; i++) {
     commentListItems[i].children[0].src = arrayElement.comments[i].avatar;
     commentListItems[i].children[0].alt = arrayElement.comments[i].name;
