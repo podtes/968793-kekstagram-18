@@ -10,6 +10,16 @@ var pictureTemplate = document.querySelector('#picture')
   .querySelector('.picture');
 var photos = [];
 var bigPictureSection = document.querySelector('.big-picture');
+var bigPicture = bigPictureSection.querySelector('.big-picture__img');
+var bigPictureImg = bigPicture.children[0];
+var likesCount = bigPictureSection.querySelector('.likes-count');
+var commentsCount = bigPictureSection.querySelector('.comments-count');
+var pictureDescription = bigPictureSection.querySelector('.social__caption');
+var commentListItems = bigPictureSection.querySelectorAll('.social__comment');
+var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
+var commentsLoader = bigPictureSection.querySelector('.comments-loader');
+
+
 /**
  * @param {number} min
  * @param {number} max
@@ -83,7 +93,7 @@ var renderPhotos = function (photo) {
   var pictureElement = pictureTemplate.cloneNode(true);
   pictureElement.querySelector('.picture__img').src = photo.url;
   pictureElement.querySelector('.picture__likes').textContent = photo.likes;
-  pictureElement.querySelector('.picture__comments').textContent = photo.comments.length; // так корректно передавать количество комментариев как длину массива?
+  pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
 
   return pictureElement;
 };
@@ -99,53 +109,43 @@ var putPhotosToPage = function () {
   document.querySelector('.pictures').appendChild(fragment);
 };
 
-createPhotosArray(25);
-putPhotosToPage();
+/**
+ * Функция скрывает элемент с помощью класса .visually-hidden
+ * @param {Node} el DOM элемент, который нужно скрыть
+ */
+var hideElemWithVisuallyHidden = function (el) {
+  el.classList.add('visually-hidden');
+};
 
-// Показываю блок полноразмерной картинки картинки
-bigPictureSection.classList.remove('hidden');
-
-// нахожу блок в котором лежит фотография
-var bigPicture = bigPictureSection.querySelector('.big-picture__img');
-
-// нахожу изображение
-var bigPictureImg = bigPicture.children[0];
-
-// присваиваю ему адрес из photos[0]
-bigPictureImg.src = photos[0].url;
-
-// нахожу элемент, в котором записано кол-во лайков
-var likesCount = bigPictureSection.querySelector('.likes-count');
+/**
+ * Функция присваивает полям большой картинки значения из элемента массива photos
+ * @param {object} arrayElement объект, содержащий необходимые значения
+ */
+var getValuesFromArrayElement = function (arrayElement) {
+  // присваиваю ему адрес из photos[0]
+  bigPictureImg.src = arrayElement.url;
 
 // переопределяю на лайки из photos[0]
-likesCount.textContent = photos[0].likes;
-
-// нахожу элемент, в котором записано кол-во комментариев
-var commentsCount = bigPictureSection.querySelector('.comments-count');
+  likesCount.textContent = arrayElement.likes;
 
 // переопределяю ко-во комментариев на значение длины массива из ключа comments элемента photos[0]
-commentsCount.textContent = photos[0].comments.length;
-
-// находим подпись к фотографии в разметке
-var pictureDescription = bigPictureSection.querySelector('.social__caption');
+  commentsCount.textContent = arrayElement.comments.length;
 
 // мняем текстовое сождержимое pictureDescription на значение ключа description в элементе photos[0]
-pictureDescription.textContent = photos[0].description;
-
-// находим все комментарии в разметке
-var commentListItems = bigPictureSection.querySelectorAll('.social__comment');
+  pictureDescription.textContent = arrayElement.description;
 
 // циклом перебираем коллекцию с комментариями и переопределяем аватарок комментариев, имен авторов и текста каждого комментария
-for (var i = 0; i <= commentListItems.length; i++) {
-  commentListItems[i].children[0].src = photos[i].comments[i].avatar; // почему тут ошибка, адреса меняет верно
-  commentListItems[i].children[0].alt = photos[i].comments[i].name;
-  commentListItems[i].children[1].textContent = photos[i].comments[i].message;
-}
+  for (var i = 0; i < commentListItems.length; i++) {
+    commentListItems[i].children[0].src = arrayElement.comments[i].avatar;
+    commentListItems[i].children[0].alt = arrayElement.comments[i].name;
+    commentListItems[i].children[1].textContent = arrayElement.comments[i].message;
+  }
+};
 
-// прячу счетчики
-var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
-commentsCounter.classList.add('visually-hidden');
-var commentsLoader = bigPictureSection.querySelector('.comments-loader');
-commentsLoader.classList.add('visually-hidden');
+createPhotosArray(25);
+putPhotosToPage();
+hideElemWithVisuallyHidden(commentsCounter);
+hideElemWithVisuallyHidden(commentsLoader);
+getValuesFromArrayElement(photos[0]);
 
-// так правильно, не считая ошибки в цикле, из-за которой не скрываются счетчики? Если ок, то буду оборачивать в функции и приводить в порядок. Ну и косяки исправлять, котрых тут наверно хватает или что-то можно оптимизировать еще.
+bigPictureSection.classList.remove('hidden');
