@@ -8,7 +8,7 @@ var LIKES_MAX = 200;
 var pictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
-var photos = [];
+var publications = [];
 var bigPictureSection = document.querySelector('.big-picture');
 var bigPicture = bigPictureSection.querySelector('.big-picture__img');
 var bigPictureImg = bigPicture.children[0];
@@ -19,12 +19,19 @@ var commentListItems = bigPictureSection.querySelectorAll('.social__comment');
 var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
 var commentsLoader = bigPictureSection.querySelector('.comments-loader');
 
-
 /**
- * @param {number} min
- * @param {number} max
- * @return {number} случайное число из интервала
+ * @typedef {{
+ * url: string,
+ *   description: string,
+ *   likes: number,
+ *   comments: {
+ *     avatar: string,
+ *     message: string,
+ *     name: string
+ *   }[]
+ * }} Publication
  */
+
 var getRandomIntFromInterval = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 };
@@ -40,22 +47,13 @@ var getRandomArrayElement = function (arr) {
 };
 
 /**
- * Функция возвращает первый сгенерированный элемент будущего массива с фотографиями
- * @param {number} numberFirstPhoto число, с которого начнется генерация адресов, из которых будут загружаться фото и аватарки
- * @return {{
- *   url: string,
- *   description: string,
- *   likes: number,
- *   comments: {
- *     avatar: string,
- *     message: string,
- *     name: string
- *   }[]
- * }}
+ * Функция создает первый объект будущего массива с публикациями пользователей
+ * @param {number} addressOfFirstPhoto число, с которого начнется генерация адресов, из которых будут загружаться фото и аватарки
+ * @return {Publication} publication объект с данными для генерациии публикации
  */
-var createPhoto = function (numberFirstPhoto) {
-  var photo = {
-    url: './photos/' + numberFirstPhoto + '.jpg',
+var createPublicationObject = function (addressOfFirstPhoto) {
+  var publication = {
+    url: './photos/' + addressOfFirstPhoto + '.jpg',
     description: AUTHOR_DESCRIPTIONS[getRandomArrayElement(AUTHOR_DESCRIPTIONS)],
     likes: getRandomIntFromInterval(LIKES_MIN, LIKES_MAX),
     comments: [{
@@ -69,69 +67,55 @@ var createPhoto = function (numberFirstPhoto) {
       name: AUTHOR_NAMES[getRandomArrayElement(AUTHOR_NAMES)]
     }]
   };
-  return photo;
+  return publication;
 };
 
 /**
- * Функция создает массив с фотографиями
- * @param {number} countOfPhotos нужное количетсво элементов массива
- * @return {[]} photos вернет массив с элементами
+ * Функция создает массив с публикациями
+ * @param {number} countOfPublications нужное количество элементов массива
+ * @return {[]} publications
  */
-var createPhotosArray = function (countOfPhotos) {
-  for (var i = 0; i < countOfPhotos; i++) {
-    photos[i] = createPhoto(i + 1);
+var createPublicationsArray = function (countOfPublications) {
+  for (var i = 0; i < countOfPublications; i++) {
+    publications[i] = createPublicationObject(i + 1);
   }
-  return photos;
+  return publications;
 };
 
 /**
  * Функция генерирует DOM элемент на основе шаблона pictureTemplate
- * @param {*[]} photo массив объектов с данными (моки)
+ * @param {object[]} publication элемент массива объектов с данными для генерации публикаций (моки)
  * @return {Node} возвращает сгенерированный DOM элемент
  */
-var renderPhotos = function (photo) {
+var generatePublication = function (publication) {
   var pictureElement = pictureTemplate.cloneNode(true);
-  pictureElement.querySelector('.picture__img').src = photo.url;
-  pictureElement.querySelector('.picture__likes').textContent = photo.likes;
-  pictureElement.querySelector('.picture__comments').textContent = photo.comments.length;
+  pictureElement.querySelector('.picture__img').src = publication.url;
+  pictureElement.querySelector('.picture__likes').textContent = publication.likes;
+  pictureElement.querySelector('.picture__comments').textContent = publication.comments.length;
 
   return pictureElement;
 };
 
-/**
- * Функция переносит сгенерированные DOM элементы на страницу index.html и вставляет в секцию pictures
- */
-var putPhotosToPage = function () {
+var putPublicationsToPage = function () {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < photos.length; i++) {
-    fragment.appendChild(renderPhotos(photos[i]));
+  for (var i = 0; i < publications.length; i++) {
+    fragment.appendChild(generatePublication(publications[i]));
   }
   document.querySelector('.pictures').appendChild(fragment);
 };
 
-/**
- * Функция скрывает элемент с помощью класса .visually-hidden
- * @param {Node} el DOM элемент, который нужно скрыть
- */
-var hideElemWithVisuallyHidden = function (el) {
-  el.classList.add('visually-hidden');
+var hideElementWithVisuallyHidden = function (element) {
+  element.classList.add('visually-hidden');
 };
 
 /**
  * Функция присваивает полям большой картинки значения из элемента массива photos
- * @param {object} arrayElement объект, содержащий необходимые значения
+ * @param {Publication} arrayElement объект, содержащий необходимые данные для генерации большой публикации
  */
-var getValuesFromArrayElement = function (arrayElement) {
-  // присваиваю ему адрес из photos[0]
+var generateBigPublication = function (arrayElement) {
   bigPictureImg.src = arrayElement.url;
-
-  // переопределяю на лайки из photos[0]
   likesCount.textContent = arrayElement.likes;
-
-  // переопределяю ко-во комментариев на значение длины массива из ключа comments элемента photos[0]
   commentsCount.textContent = arrayElement.comments.length;
-
-  // мняем текстовое сождержимое pictureDescription на значение ключа description в элементе photos[0]
   pictureDescription.textContent = arrayElement.description;
 
   // циклом перебираем коллекцию с комментариями и переопределяем аватарок комментариев, имен авторов и текста каждого комментария
@@ -142,10 +126,10 @@ var getValuesFromArrayElement = function (arrayElement) {
   }
 };
 
-createPhotosArray(25);
-putPhotosToPage();
-hideElemWithVisuallyHidden(commentsCounter);
-hideElemWithVisuallyHidden(commentsLoader);
-getValuesFromArrayElement(photos[0]);
+createPublicationsArray(25);
+putPublicationsToPage();
+hideElementWithVisuallyHidden(commentsCounter);
+hideElementWithVisuallyHidden(commentsLoader);
+generateBigPublication(publications[0]);
 
 bigPictureSection.classList.remove('hidden');
