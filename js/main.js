@@ -42,41 +42,40 @@ var getRandomIntFromInterval = function (min, max) {
  * @return {*} randomValue случайный элемент массива
  */
 var getRandomArrayElement = function (arr) {
-  var randomValue = Math.floor(Math.random() * arr.length);
+  var randomValue = arr[Math.floor(Math.random() * arr.length)];
   return randomValue;
 };
 
 /**
- * Функция создает первый объект будущего массива с публикациями пользователей
- * @param {number} addressOfFirstPhoto число, с которого начнется генерация адресов, из которых будут загружаться фото и аватарки
+ * Функция создает объект, который описывает публикацию
+ * @param {number} photoNumber порядковый номер файла с фотографией
  * @return {Publication} publication объект с данными для генерациии публикации
  */
-var createPublicationObject = function (addressOfFirstPhoto) {
+var createPublicationObject = function (photoNumber) {
   var publication = {
-    url: './photos/' + addressOfFirstPhoto + '.jpg',
-    description: AUTHOR_DESCRIPTIONS[getRandomArrayElement(AUTHOR_DESCRIPTIONS)],
+    url: './photos/' + photoNumber + '.jpg',
+    description: getRandomArrayElement(AUTHOR_DESCRIPTIONS),
     likes: getRandomIntFromInterval(LIKES_MIN, LIKES_MAX),
     comments: [{
       avatar: './img/avatar-' + getRandomIntFromInterval(1, 6) + '.svg',
-      message: AUTHOR_COMMENTS[getRandomArrayElement(AUTHOR_COMMENTS)],
-      name: AUTHOR_NAMES[getRandomArrayElement(AUTHOR_NAMES)]
+      message: getRandomArrayElement(AUTHOR_COMMENTS),
+      name: getRandomArrayElement(AUTHOR_NAMES)
     },
     {
       avatar: './img/avatar-' + getRandomIntFromInterval(1, 6) + '.svg',
-      message: AUTHOR_COMMENTS[getRandomArrayElement(AUTHOR_COMMENTS)],
-      name: AUTHOR_NAMES[getRandomArrayElement(AUTHOR_NAMES)]
+      message: getRandomArrayElement(AUTHOR_COMMENTS),
+      name: getRandomArrayElement(AUTHOR_NAMES)
     }]
   };
   return publication;
 };
 
 /**
- * Функция создает массив с публикациями
- * @param {number} countOfPublications нужное количество элементов массива
- * @return {[]} publications
+ * @param {number} arraySize нужное количество элементов массива
+ * @return {Publication[]}
  */
-var createPublicationsArray = function (countOfPublications) {
-  for (var i = 0; i < countOfPublications; i++) {
+var createPublicationsArray = function (arraySize) {
+  for (var i = 0; i < arraySize; i++) {
     publications[i] = createPublicationObject(i + 1);
   }
   return publications;
@@ -84,10 +83,10 @@ var createPublicationsArray = function (countOfPublications) {
 
 /**
  * Функция генерирует DOM элемент на основе шаблона pictureTemplate
- * @param {object[]} publication элемент массива объектов с данными для генерации публикаций (моки)
+ * @param {Publication} publication
  * @return {Node} возвращает сгенерированный DOM элемент
  */
-var generatePublication = function (publication) {
+var generatePublicationHtmlElement = function (publication) {
   var pictureElement = pictureTemplate.cloneNode(true);
   pictureElement.querySelector('.picture__img').src = publication.url;
   pictureElement.querySelector('.picture__likes').textContent = publication.likes;
@@ -96,40 +95,54 @@ var generatePublication = function (publication) {
   return pictureElement;
 };
 
-var putPublicationsToPage = function () {
+/**
+ * @param {Publication[]} publicationsArr
+ * @return void
+ */
+var renderPublicationHtmlElements = function (publicationsArr) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < publications.length; i++) {
-    fragment.appendChild(generatePublication(publications[i]));
+  for (var i = 0; i < publicationsArr.length; i++) {
+    fragment.appendChild(generatePublicationHtmlElement(publicationsArr[i]));
   }
   document.querySelector('.pictures').appendChild(fragment);
+
 };
 
-var hideElementWithVisuallyHidden = function (element) {
+var hideElement = function (element) {
   element.classList.add('visually-hidden');
 };
 
 /**
- * Функция присваивает полям большой картинки значения из элемента массива photos
- * @param {Publication} arrayElement объект, содержащий необходимые данные для генерации большой публикации
+ *
+ * @param {Publication} publication
+ * @return void
  */
-var generateBigPublication = function (arrayElement) {
-  bigPictureImg.src = arrayElement.url;
-  likesCount.textContent = arrayElement.likes;
-  commentsCount.textContent = arrayElement.comments.length;
-  pictureDescription.textContent = arrayElement.description;
-
-  // циклом перебираем коллекцию с комментариями и переопределяем аватарок комментариев, имен авторов и текста каждого комментария
+var renderCommentHtmlElements = function (publication) {
   for (var i = 0; i < commentListItems.length; i++) {
-    commentListItems[i].children[0].src = arrayElement.comments[i].avatar;
-    commentListItems[i].children[0].alt = arrayElement.comments[i].name;
-    commentListItems[i].children[1].textContent = arrayElement.comments[i].message;
+    commentListItems[i].children[0].src = publication.comments[i].avatar;
+    commentListItems[i].children[0].alt = publication.comments[i].name;
+    commentListItems[i].children[1].textContent = publication.comments[i].message;
   }
 };
 
+/**
+ * Функция присваивает полям выбранного пользователем поста значения из публикации
+ * @param {Publication} publication объект, содержащий необходимые данные для генерации активной публикации
+ * @return void
+ */
+var renderActivePublicationHtmlElement = function (publication) {
+  bigPictureImg.src = publication.url;
+  likesCount.textContent = publication.likes;
+  commentsCount.textContent = publication.comments.length;
+  pictureDescription.textContent = publication.description;
+
+  renderCommentHtmlElements(publications[0]);
+};
+
 createPublicationsArray(25);
-putPublicationsToPage();
-hideElementWithVisuallyHidden(commentsCounter);
-hideElementWithVisuallyHidden(commentsLoader);
-generateBigPublication(publications[0]);
+renderPublicationHtmlElements(publications);
+hideElement(commentsCounter);
+hideElement(commentsLoader);
+renderActivePublicationHtmlElement(publications[0]);
 
 bigPictureSection.classList.remove('hidden');
