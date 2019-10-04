@@ -97,7 +97,7 @@ var generatePublicationHtmlElement = function (publication) {
 
 /**
  * @param {Publication[]} publicationsArr
- * @return void
+ * @return {void}
  */
 var renderPublicationHtmlElements = function (publicationsArr) {
   var fragment = document.createDocumentFragment();
@@ -115,7 +115,7 @@ var hideElement = function (element) {
 /**
  *
  * @param {Publication} publication
- * @return void
+ * @return {void}
  */
 var renderCommentHtmlElements = function (publication) {
   for (var i = 0; i < commentListItems.length; i++) {
@@ -128,7 +128,7 @@ var renderCommentHtmlElements = function (publication) {
 /**
  * Функция присваивает полям выбранного пользователем поста значения из публикации
  * @param {Publication} publication объект, содержащий необходимые данные для генерации активной публикации
- * @return void
+ * @return {void}
  */
 var renderActivePublicationHtmlElement = function (publication) {
   bigPictureImg.src = publication.url;
