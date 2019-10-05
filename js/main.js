@@ -5,6 +5,7 @@ var AUTHOR_COMMENTS = ['Всё отлично!', 'В целом всё непл�
 var AUTHOR_DESCRIPTIONS = ['Классно посидели!', 'Вот такой отпуск', 'Вы только посмотрите на это!', 'Какая то умная цитата несуществующего философа', 'Размышления о жизни', 'Сходил на бизнес-тренинг и теперь могу постить такие фотографии', 'Завидуйте мне', 'Просто фотография еды', 'Ставьте лайки, делайте репосты, подписывайтесь на колокольчик'];
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
+var ESC_KEYCODE = 27;
 var pictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
@@ -18,6 +19,14 @@ var pictureDescription = bigPictureSection.querySelector('.social__caption');
 var commentListItems = bigPictureSection.querySelectorAll('.social__comment');
 var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
 var commentsLoader = bigPictureSection.querySelector('.comments-loader');
+var uploadFileOpen = document.getElementById('upload-file');
+var uploadFileClose = document.getElementById('upload-cancel');
+var imageRedactor = document.querySelector('.img-upload__overlay');
+var postImagePreview = imageRedactor.querySelector('.img-upload__preview');
+var effectLevel = imageRedactor.querySelector('.img-upload__effect-level');
+var effectLevelValue = imageRedactor.querySelector('.effect-level__value');
+var hashtagsInput = imageRedactor.querySelector('.text__hashtags');
+var descriptionInput = imageRedactor.querySelector('.text__description');
 
 /**
  * @typedef {{
@@ -139,10 +148,136 @@ var renderActivePublicationHtmlElement = function (publication) {
   renderCommentHtmlElements(publications[0]);
 };
 
+var openRedactorPressEscHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    imageRedactor.classList.add('hidden');
+    uploadFileOpen.value = '';
+  }
+};
+
+var openRedactor = function () {
+  imageRedactor.classList.remove('hidden');
+  document.addEventListener('keydown', openRedactorPressEscHandler);
+  descriptionInput.addEventListener('focus', function () {
+    document.removeEventListener('keydown', openRedactorPressEscHandler);
+  });
+  descriptionInput.addEventListener('blur', function () {
+    document.addEventListener('keydown', openRedactorPressEscHandler);
+  });
+};
+
+var closeRedactor = function () {
+  imageRedactor.classList.add('hidden');
+  document.removeEventListener('keydown', openRedactorPressEscHandler);
+  uploadFileOpen.value = '';
+};
+
 createPublicationsArray(25);
 renderPublicationHtmlElements(publications);
 hideElement(commentsCounter);
 hideElement(commentsLoader);
 renderActivePublicationHtmlElement(publications[0]);
 
-bigPictureSection.classList.remove('hidden');
+// bigPictureSection.classList.remove('hidden');
+
+uploadFileOpen.addEventListener('change', function () {
+  openRedactor();
+});
+
+uploadFileClose.addEventListener('click', function () {
+  closeRedactor();
+});
+
+
+// передвижение пина интенсивности фильтра
+var effectLevelPin = imageRedactor.querySelector('.effect-level__pin');
+effectLevelPin.addEventListener('mouseup', function () {
+  console.log('Отпустил кнопку');
+});
+
+
+// список иконок для переключения фильтров в редакторе
+var noneEffect = imageRedactor.querySelector('.effects__preview--none');
+var chromeEffect = imageRedactor.querySelector('.effects__preview--chrome');
+var sepiaEffect = imageRedactor.querySelector('.effects__preview--sepia');
+var marvinEffect = imageRedactor.querySelector('.effects__preview--marvin');
+var phobosEffect = imageRedactor.querySelector('.effects__preview--phobos');
+var heatEffect = imageRedactor.querySelector('.effects__preview--heat');
+
+/**
+ * @param {string} effect функция добавляет класс по которому к изображению применяется фильтр
+ * return {void}
+ */
+var addEffectToImagePreview = function (effect) {
+  postImagePreview.children[0].classList.add('effects__preview--' + effect);
+};
+
+noneEffect.addEventListener('click', function () {
+  effectLevel.classList.add('hidden'); // при клике скрываем индикатор интенсивности фильтра
+  postImagePreview.children[0].style.filter = ''; // обнуляем св-во filter
+  postImagePreview.children[0].className = ''; // удаляем все классы на превью изображения
+});
+
+chromeEffect.addEventListener('click', function () {
+  effectLevel.classList.remove('hidden');
+  postImagePreview.children[0].style.filter = '';
+  postImagePreview.children[0].className = '';
+  addEffectToImagePreview('chrome'); // накладываем св-во
+  postImagePreview.children[0].style.filter = 'grayscale(' + 1 / 100 * effectLevelValue.value + ')'; // записываем в св-во filter текущее значение индикатора интенсивности фильтра
+});
+
+sepiaEffect.addEventListener('click', function () {
+  effectLevel.classList.remove('hidden');
+  postImagePreview.children[0].style.filter = '';
+  postImagePreview.children[0].className = '';
+  addEffectToImagePreview('sepia');
+  postImagePreview.children[0].style.filter = 'sepia(' + 1 / 100 * effectLevelValue.value + ')';
+});
+
+marvinEffect.addEventListener('click', function () {
+  effectLevel.classList.remove('hidden');
+  postImagePreview.children[0].style.filter = '';
+  postImagePreview.children[0].className = '';
+  addEffectToImagePreview('marvin');
+  postImagePreview.children[0].style.filter = 'invert(' + 100 / 100 * effectLevelValue.value + '%)';
+});
+
+phobosEffect.addEventListener('click', function () {
+  effectLevel.classList.remove('hidden');
+  postImagePreview.children[0].style.filter = '';
+  postImagePreview.children[0].className = '';
+  addEffectToImagePreview('phobos');
+  postImagePreview.children[0].style.filter = 'blur(' + 3 / 100 * effectLevelValue.value + 'px)';
+});
+
+heatEffect.addEventListener('click', function () {
+  effectLevel.classList.remove('hidden');
+  postImagePreview.children[0].style.filter = '';
+  postImagePreview.children[0].className = '';
+  addEffectToImagePreview('heat');
+  postImagePreview.children[0].style.filter = 'brightness(' + 3 / 100 * effectLevelValue.value + ')';
+});
+
+
+// описание валидации для поля ввода хэштегов
+
+hashtagsInput.addEventListener('change', function () { // ловлю момент, когда пользователь заканчивает вводить хэштеги
+  var hashtags = hashtagsInput.value.split(' '); // преобразую все хэштеги в массив
+  if (hashtags.length > 20) { // проверяю не превышено ли максимальное количество
+    console.log('слишком много тегов');
+    hashtagsInput.setCustomValidity('Максимальное количество хэштегов - 20 штук');
+  } else {
+    console.log('кол-во тегов норм');
+    hashtagsInput.setCustomValidity('');
+  }
+
+  for (var i = 0; i < hashtags.length; i++) {
+    if (true) { // тут должна быть проверка на то, что первый символ элемента массива === #
+      console.log('проверка ок');
+      hashtagsInput.setCustomValidity('');
+    } else {
+      hashtagsInput.setCustomValidity('Все хэштеги должны начинаться с символа #');
+    }
+  }
+});
+
