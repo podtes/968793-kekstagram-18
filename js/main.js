@@ -21,12 +21,13 @@ var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
 var commentsLoader = bigPictureSection.querySelector('.comments-loader');
 var uploadFileOpen = document.getElementById('upload-file');
 var uploadFileClose = document.getElementById('upload-cancel');
-var imageRedactor = document.querySelector('.img-upload__overlay');
-var postImagePreview = imageRedactor.querySelector('.img-upload__preview');
-var effectLevel = imageRedactor.querySelector('.img-upload__effect-level');
-var effectLevelValue = imageRedactor.querySelector('.effect-level__value');
-var hashtagsInput = imageRedactor.querySelector('.text__hashtags');
-var descriptionInput = imageRedactor.querySelector('.text__description');
+var imageRedactorSection = document.querySelector('.img-upload__overlay');
+var imageRedactorForm = document.querySelector('.img-upload__form');
+var postImagePreview = imageRedactorForm.querySelector('.img-upload__preview');
+var effectLevel = imageRedactorForm.querySelector('.img-upload__effect-level');
+var effectLevelValue = imageRedactorForm.querySelector('.effect-level__value');
+var hashtagsInput = imageRedactorForm.querySelector('.text__hashtags');
+var descriptionInput = imageRedactorForm.querySelector('.text__description');
 
 /**
  * @typedef {{
@@ -150,13 +151,13 @@ var renderActivePublicationHtmlElement = function (publication) {
 
 var openRedactorPressEscHandler = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    imageRedactor.classList.add('hidden');
+    imageRedactorForm.classList.add('hidden');
     uploadFileOpen.value = '';
   }
 };
 
 var openRedactor = function () {
-  imageRedactor.classList.remove('hidden');
+  imageRedactorSection.classList.remove('hidden');
   document.addEventListener('keydown', openRedactorPressEscHandler);
   descriptionInput.addEventListener('focus', function () {
     document.removeEventListener('keydown', openRedactorPressEscHandler);
@@ -167,7 +168,7 @@ var openRedactor = function () {
 };
 
 var closeRedactor = function () {
-  imageRedactor.classList.add('hidden');
+  imageRedactorForm.classList.add('hidden');
   document.removeEventListener('keydown', openRedactorPressEscHandler);
   uploadFileOpen.value = '';
 };
@@ -190,19 +191,19 @@ uploadFileClose.addEventListener('click', function () {
 
 
 // передвижение пина интенсивности фильтра
-var effectLevelPin = imageRedactor.querySelector('.effect-level__pin');
+var effectLevelPin = imageRedactorForm.querySelector('.effect-level__pin');
 effectLevelPin.addEventListener('mouseup', function () {
   console.log('Отпустил кнопку');
 });
 
 
 // список иконок для переключения фильтров в редакторе
-var noneEffect = imageRedactor.querySelector('.effects__preview--none');
-var chromeEffect = imageRedactor.querySelector('.effects__preview--chrome');
-var sepiaEffect = imageRedactor.querySelector('.effects__preview--sepia');
-var marvinEffect = imageRedactor.querySelector('.effects__preview--marvin');
-var phobosEffect = imageRedactor.querySelector('.effects__preview--phobos');
-var heatEffect = imageRedactor.querySelector('.effects__preview--heat');
+var noneEffect = imageRedactorForm.querySelector('.effects__preview--none');
+var chromeEffect = imageRedactorForm.querySelector('.effects__preview--chrome');
+var sepiaEffect = imageRedactorForm.querySelector('.effects__preview--sepia');
+var marvinEffect = imageRedactorForm.querySelector('.effects__preview--marvin');
+var phobosEffect = imageRedactorForm.querySelector('.effects__preview--phobos');
+var heatEffect = imageRedactorForm.querySelector('.effects__preview--heat');
 
 /**
  * @param {string} effect функция добавляет класс по которому к изображению применяется фильтр
@@ -261,23 +262,65 @@ heatEffect.addEventListener('click', function () {
 
 // описание валидации для поля ввода хэштегов
 
-hashtagsInput.addEventListener('change', function () { // ловлю момент, когда пользователь заканчивает вводить хэштеги
-  var hashtags = hashtagsInput.value.split(' '); // преобразую все хэштеги в массив
-  if (hashtags.length > 20) { // проверяю не превышено ли максимальное количество
+hashtagsInput.addEventListener('change', function () {
+  var hashtags = hashtagsInput.value.split(' ');
+  if (hashtags.length > 5) { // проверяю не превышено ли максимальное количество
     console.log('слишком много тегов');
-    hashtagsInput.setCustomValidity('Максимальное количество хэштегов - 20 штук');
+    hashtagsInput.setCustomValidity('Максимальное количество хэштегов - 5 штук');
+    imageRedactorForm.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+    });
   } else {
-    console.log('кол-во тегов норм');
+    console.log('Кол-во тегов ок!');
     hashtagsInput.setCustomValidity('');
+    imageRedactorForm.addEventListener('submit', function () {
+    });
   }
 
+
   for (var i = 0; i < hashtags.length; i++) {
-    if (true) { // тут должна быть проверка на то, что первый символ элемента массива === #
-      console.log('проверка ок');
-      hashtagsInput.setCustomValidity('');
+    if (hashtags[i].charAt(0) !== '#') { // проверка на то, что первый символ элемента массива === #
+      console.log(hashtags[i] + ' должен начинаться с символа #');
+      hashtagsInput.setCustomValidity('Хэштег ' + hashtags[i] + ' должен начинаться с символа #');
+      imageRedactorForm.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+      });
     } else {
-      hashtagsInput.setCustomValidity('Все хэштеги должны начинаться с символа #');
+      console.log('Все ок! Хэштег ' + hashtags[i] + ' в порядке');
+      hashtagsInput.setCustomValidity(' ');
+      imageRedactorForm.addEventListener('submit', function () {
+      });
+    }
+  }
+
+  for (i = 0; i < hashtags.length; i++) {
+    if (hashtags.indexOf(hashtags[i]) !== i) { // Проверка на повтор хэштегов. Если индекс первого вхождения не равен порядковому номеру элемента - значит повтор
+      console.log('Вы несколько раз ввели хэштег ' + hashtags[i]);
+      hashtagsInput.setCustomValidity('Хэштэг ' + hashtags[i] + ' повторяется несколько раз. Удалите повторы!');
+      imageRedactorForm.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+      });
+    } else {
+      console.log('Теги не повторяются');
+      hashtagsInput.setCustomValidity('');
+      imageRedactorForm.addEventListener('submit', function () {
+      });
+    }
+    // как написать проверку, чтобы она не учитывала регистр букв?
+  }
+
+  for (i = 0; i < hashtags.length; i++) {
+    if (hashtags[i].length > 20) { // проверка на длину каждого хэштега
+      console.log('Длина хэштега НЕ ок');
+      hashtagsInput.setCustomValidity('Хэштэг ' + hashtags[i] + ' слишком длинный. Максимальная длина - 20 символов');
+      imageRedactorForm.addEventListener('submit', function (evt) {
+        evt.preventDefault();
+      });
+    } else {
+      console.log('Длина хэштега ок');
+      hashtagsInput.setCustomValidity('');
+      imageRedactorForm.addEventListener('submit', function () {
+      });
     }
   }
 });
-
