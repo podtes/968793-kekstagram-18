@@ -35,6 +35,7 @@ var sepiaEffect = imageRedactorForm.querySelector('.effects__preview--sepia');
 var marvinEffect = imageRedactorForm.querySelector('.effects__preview--marvin');
 var phobosEffect = imageRedactorForm.querySelector('.effects__preview--phobos');
 var heatEffect = imageRedactorForm.querySelector('.effects__preview--heat');
+var isValidity;
 
 /**
  * @typedef {{
@@ -213,6 +214,7 @@ var changeHashtagsToLowerCase = function (hashtagsArr) {
 
 var checkCountOfHashtags = function (hashtagsArr) {
   if (hashtagsArr.length > 5) {
+    isValidity = false;
     console.log('много хэштегов');
   }
 };
@@ -220,6 +222,7 @@ var checkCountOfHashtags = function (hashtagsArr) {
 var checkFirstCharacterOfHashtags = function (hashtagsArr) {
   for (var i = 0; i < hashtagsArr.length; i++) {
     if (hashtagsArr[i].charAt(0) !== '#' || hashtagsArr[i] === '#') {
+      isValidity = false;
       console.log('начинается не с # или состоит только из #');
       break;
     }
@@ -230,6 +233,7 @@ var checkRepeatHashtags = function (hashtagsArr) {
   changeHashtagsToLowerCase(hashtagsArr);
   for (var i = 0; i < hashtagsArr.length; i++) {
     if (hashtagsArr.indexOf(hashtagsArr[i]) !== i) {
+      isValidity = false;
       console.log('повторы');
       break;
     }
@@ -239,6 +243,7 @@ var checkRepeatHashtags = function (hashtagsArr) {
 var checkLengthOfHashtag = function (hashtagsArr) {
   for (var i = 0; i < hashtagsArr.length; i++) {
     if (hashtagsArr[i].length > 20) {
+      isValidity = false;
       console.log('длинный хэштег');
       break;
     }
@@ -304,6 +309,7 @@ heatEffect.addEventListener('click', function () {
 // описание валидации для поля ввода хэштегов
 
 hashtagsInput.addEventListener('change', function () {
+  isValidity = true;
   var hashtags = hashtagsInput.value.split(' ');
   checkCountOfHashtags(hashtags);
   checkFirstCharacterOfHashtags(hashtags);
@@ -312,9 +318,7 @@ hashtagsInput.addEventListener('change', function () {
 });
 
 imageRedactorForm.addEventListener('submit', function (evt) {
-  if (hashtagsInput.validity.valid) {
-  // если поле валидно, то форма отправляется
-  } else {
+  if (!isValidity) {
     evt.preventDefault();
   }
 });
