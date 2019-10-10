@@ -228,23 +228,23 @@ var changeHashtagsToLowerCase = function (hashtagsArr) {
 
 // описание валидации для поля ввода хэштегов
 
-var checkCountOfHashtags = function (hashtagsArr) {
+var isCountOfHashtagsValid = function (hashtagsArr) {
   if (hashtagsArr.length > HASHTAGS_MAX) {
-    valids[0] = false;
+    console.log('присвоил сеткастом');
+    return false;
   } else {
-    valids[0] = true;
+    console.log('не присвоилось');
+    return true;
   }
 };
 
+
+
 var checkFirstCharacterOfHashtags = function (hashtagsArr) {
-  valids[1] = true;
   if (hashtagsArr.length > 1) {
     for (var i = 0; i < hashtagsArr.length; i++) {
       if (hashtagsArr[i].charAt(0) !== '#' || hashtagsArr[i] === '#' || hashtagsArr[i].charAt(i + 1) === '#') {
-        valids[1] = false;
         break;
-      } else {
-        valids[1] = true;
       }
     }
   }
@@ -254,10 +254,7 @@ var checkRepeatHashtags = function (hashtagsArr) {
   changeHashtagsToLowerCase(hashtagsArr);
   for (var i = 0; i < hashtagsArr.length; i++) {
     if (hashtagsArr.indexOf(hashtagsArr[i]) !== i) {
-      valids[2] = false;
       break;
-    } else {
-      valids[2] = true;
     }
   }
 };
@@ -265,43 +262,20 @@ var checkRepeatHashtags = function (hashtagsArr) {
 var checkLengthOfHashtag = function (hashtagsArr) {
   for (var i = 0; i < hashtagsArr.length; i++) {
     if (hashtagsArr[i].length > HASHTAG_MAX) {
-      valids[3] = false;
       break;
-    } else {
-      valids[3] = true;
     }
   }
 };
 
 var checkHashInWords = function (hashtagsArr) {
   var i = 0;
-  valids[4] = true;
   if (i < hashtagsArr.length) {
     for (var j = 0; j < hashtagsArr[i].length; j++) {
       if (hashtagsArr[i].charAt(0) === '#' && hashtagsArr[i].charAt(j + 1) === '#') {
-        valids[4] = false;
         break;
-      } else {
-        valids[4] = true;
       }
     }
     i++;
-  }
-};
-
-var validateHashtagsInput = function () {
-  if (valids[0] === false) {
-    hashtagsInput.setCustomValidity('Максимальное число хэштегов - 5');
-  } else if (valids[1] === false) {
-    hashtagsInput.setCustomValidity('Хэштег должен начинаться с # и не состоять только из #');
-  } else if (valids[2] === false) {
-    hashtagsInput.setCustomValidity('Хэштеги не должны повторяться');
-  } else if (valids[3] === false) {
-    hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов');
-  } else if (valids[4] === false) {
-    hashtagsInput.setCustomValidity('Хэштеги должны быть разделены пробелами');
-  } else {
-    hashtagsInput.setCustomValidity('');
   }
 };
 
@@ -391,12 +365,21 @@ heatEffect.addEventListener('click', function () {
 
 // проверки перед отправкой формы
 
-imageRedactorForm.addEventListener('submit', function () {
+hashtagsInput.addEventListener('input', function () {
+  hashtagsInput.setCustomValidity('');
   var hashtags = hashtagsInput.value.split(' ');
-  checkCountOfHashtags(hashtags);
-  checkFirstCharacterOfHashtags(hashtags);
-  checkRepeatHashtags(hashtags);
-  checkLengthOfHashtag(hashtags);
-  checkHashInWords(hashtags);
-  validateHashtagsInput();
+  isCountOfHashtagsValid(hashtags);
+  if (!isCountOfHashtagsValid(hashtags)) {
+    hashtagsInput.setCustomValidity('Максимальное число хэштегов - 5');
+  }
+});
+
+imageRedactorForm.addEventListener('submit', function () {
+  // var hashtags = hashtagsInput.value.split(' ');
+  // checkCountOfHashtags(hashtags);
+  // checkFirstCharacterOfHashtags(hashtags);
+  // checkRepeatHashtags(hashtags);
+  // checkLengthOfHashtag(hashtags);
+  // checkHashInWords(hashtags);
+  // validateHashtagsInput();
 });
