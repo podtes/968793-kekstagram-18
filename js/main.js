@@ -227,58 +227,74 @@ var changeHashtagsToLowerCase = function (hashtagsArr) {
 };
 
 // описание валидации для поля ввода хэштегов
-
 var isCountOfHashtagsValid = function (hashtagsArr) {
   if (hashtagsArr.length > HASHTAGS_MAX) {
-    console.log('присвоил сеткастом');
     return false;
   } else {
-    console.log('не присвоилось');
     return true;
   }
 };
-
-
-
-var checkFirstCharacterOfHashtags = function (hashtagsArr) {
-  if (hashtagsArr.length > 1) {
+var isFirstCharacterOfHashtagsValid = function (hashtagsArr) {
+  if (hashtagsArr.length >= 1) {
     for (var i = 0; i < hashtagsArr.length; i++) {
-      if (hashtagsArr[i].charAt(0) !== '#' || hashtagsArr[i] === '#' || hashtagsArr[i].charAt(i + 1) === '#') {
-        break;
+      if (hashtagsArr[i].charAt(0) !== '#' || hashtagsArr[i] === '#') {
+        return false;
       }
     }
   }
+  return true;
 };
-
-var checkRepeatHashtags = function (hashtagsArr) {
+var isRepeatHashtagsValid = function (hashtagsArr) {
   changeHashtagsToLowerCase(hashtagsArr);
   for (var i = 0; i < hashtagsArr.length; i++) {
     if (hashtagsArr.indexOf(hashtagsArr[i]) !== i) {
-      break;
+      return false;
     }
   }
+  return true;
 };
-
-var checkLengthOfHashtag = function (hashtagsArr) {
+var isLengthOfHashtagValid = function (hashtagsArr) {
   for (var i = 0; i < hashtagsArr.length; i++) {
     if (hashtagsArr[i].length > HASHTAG_MAX) {
-      break;
+      return false;
     }
   }
+  return true;
 };
-
-var checkHashInWords = function (hashtagsArr) {
-  var i = 0;
-  if (i < hashtagsArr.length) {
+var isHashInWordsValid = function (hashtagsArr) {
+  for (var i = 0; i < hashtagsArr.length; i++) {
     for (var j = 0; j < hashtagsArr[i].length; j++) {
       if (hashtagsArr[i].charAt(0) === '#' && hashtagsArr[i].charAt(j + 1) === '#') {
-        break;
+        return false;
       }
     }
-    i++;
+  }
+  return true;
+};
+var validateHashtagsInput = function () {
+  hashtagsInput.setCustomValidity('');
+  var hashtags = hashtagsInput.value.split(' ');
+  isCountOfHashtagsValid(hashtags);
+  isRepeatHashtagsValid(hashtags);
+  isFirstCharacterOfHashtagsValid(hashtags);
+  isLengthOfHashtagValid(hashtags);
+  isHashInWordsValid(hashtags);
+  if (!isCountOfHashtagsValid(hashtags)) {
+    hashtagsInput.setCustomValidity('Максимальное число хэштегов - 5');
+  } else if (!isRepeatHashtagsValid(hashtags)) {
+    hashtagsInput.setCustomValidity('Хэштеги не должны повторяться');
+  } else if (!isFirstCharacterOfHashtagsValid(hashtags)) {
+    hashtagsInput.setCustomValidity('Хэштег должен начинаться с символа # и не состоять только из #');
+  } else if (!isLengthOfHashtagValid(hashtags)) {
+    hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов');
+  } else if (!isHashInWordsValid(hashtags)) {
+    hashtagsInput.setCustomValidity('хэштеги должны разделяться пробелами');
+  } else {
+    hashtagsInput.setCustomValidity('');
   }
 };
 
+// масштабирование превью картинки в редакторе
 var scalePostImagePreviewBigger = function () {
   var scaleControlValueInNumber = +scaleControlValue.value.slice(0, -1);
   if (scaleControlValueInNumber <= 75) {
@@ -289,7 +305,6 @@ var scalePostImagePreviewBigger = function () {
     scaleControlValueInNumber = scaleControlValueInNumber;
   }
 };
-
 var scalePostImagePreviewSmaller = function () {
   var scaleControlValueInNumber = +scaleControlValue.value.slice(0, -1);
   if (scaleControlValueInNumber >= 50) {
@@ -314,12 +329,10 @@ uploadFileOpen.addEventListener('change', openRedactor);
 uploadFileClose.addEventListener('click', closeRedactor);
 
 // кнопки масштаба
-
 scaleControlBiggerButton.addEventListener('click', scalePostImagePreviewBigger);
 scaleControlSmallerButton.addEventListener('click', scalePostImagePreviewSmaller);
 
 // передвижение пина интенсивности фильтра
-
 effectLevelPin.addEventListener('mouseup', function (evt) {
   var effectLevelLine = imageRedactorForm.querySelector('.effect-level__line'); // нашел весь слайдер
   var effectLevelLineGeometricProperties = effectLevelLine.getBoundingClientRect(); // нашел все свойства слайдера как геометрического объекта
@@ -327,7 +340,6 @@ effectLevelPin.addEventListener('mouseup', function (evt) {
 });
 
 // наложение фильтров на картинку
-
 noneEffect.addEventListener('click', function () {
   effectLevel.classList.add('hidden');
   clearEffectsAndClassnameProperties();
@@ -363,23 +375,5 @@ heatEffect.addEventListener('click', function () {
   postImagePreview.children[0].style.filter = 'brightness(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + ')';
 });
 
-// проверки перед отправкой формы
-
-hashtagsInput.addEventListener('input', function () {
-  hashtagsInput.setCustomValidity('');
-  var hashtags = hashtagsInput.value.split(' ');
-  isCountOfHashtagsValid(hashtags);
-  if (!isCountOfHashtagsValid(hashtags)) {
-    hashtagsInput.setCustomValidity('Максимальное число хэштегов - 5');
-  }
-});
-
-imageRedactorForm.addEventListener('submit', function () {
-  // var hashtags = hashtagsInput.value.split(' ');
-  // checkCountOfHashtags(hashtags);
-  // checkFirstCharacterOfHashtags(hashtags);
-  // checkRepeatHashtags(hashtags);
-  // checkLengthOfHashtag(hashtags);
-  // checkHashInWords(hashtags);
-  // validateHashtagsInput();
-});
+// проверка поля с хэштегами перед отправкой
+hashtagsInput.addEventListener('input', validateHashtagsInput);
