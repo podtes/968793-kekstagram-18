@@ -28,24 +28,23 @@ var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
 var commentsLoader = bigPictureSection.querySelector('.comments-loader');
 var uploadFileOpen = document.getElementById('upload-file');
 var uploadFileClose = document.getElementById('upload-cancel');
-var imageRedactorSection = document.querySelector('.img-upload__overlay');
-var imageRedactorForm = document.querySelector('.img-upload__form');
-var postImagePreview = imageRedactorForm.querySelector('.img-upload__preview');
-var effectLevel = imageRedactorForm.querySelector('.img-upload__effect-level');
-var effectLevelPin = imageRedactorForm.querySelector('.effect-level__pin');
-var effectLevelValue = imageRedactorForm.querySelector('.effect-level__value');
-var hashtagsInput = imageRedactorForm.querySelector('.text__hashtags');
-var descriptionInput = imageRedactorForm.querySelector('.text__description');
-var noneEffect = imageRedactorForm.querySelector('.effects__preview--none');
-var chromeEffect = imageRedactorForm.querySelector('.effects__preview--chrome');
-var sepiaEffect = imageRedactorForm.querySelector('.effects__preview--sepia');
-var marvinEffect = imageRedactorForm.querySelector('.effects__preview--marvin');
-var phobosEffect = imageRedactorForm.querySelector('.effects__preview--phobos');
-var heatEffect = imageRedactorForm.querySelector('.effects__preview--heat');
-var valids = [];
-var scaleControlSmallerButton = imageRedactorForm.querySelector('.scale__control--smaller');
-var scaleControlBiggerButton = imageRedactorForm.querySelector('.scale__control--bigger');
-var scaleControlValue = imageRedactorForm.querySelector('.scale__control--value');
+var imageEditorSection = document.querySelector('.img-upload__overlay');
+var imageEditorForm = document.querySelector('.img-upload__form');
+var postImagePreview = imageEditorForm.querySelector('.img-upload__preview');
+var effectLevel = imageEditorForm.querySelector('.img-upload__effect-level');
+var effectLevelPin = imageEditorForm.querySelector('.effect-level__pin');
+var effectLevelValue = imageEditorForm.querySelector('.effect-level__value');
+var hashtagsInput = imageEditorForm.querySelector('.text__hashtags');
+var descriptionInput = imageEditorForm.querySelector('.text__description');
+var noneEffect = imageEditorForm.querySelector('.effects__preview--none');
+var chromeEffect = imageEditorForm.querySelector('.effects__preview--chrome');
+var sepiaEffect = imageEditorForm.querySelector('.effects__preview--sepia');
+var marvinEffect = imageEditorForm.querySelector('.effects__preview--marvin');
+var phobosEffect = imageEditorForm.querySelector('.effects__preview--phobos');
+var heatEffect = imageEditorForm.querySelector('.effects__preview--heat');
+var scaleControlSmallerButton = imageEditorForm.querySelector('.scale__control--smaller');
+var scaleControlBiggerButton = imageEditorForm.querySelector('.scale__control--bigger');
+var scaleControlValue = imageEditorForm.querySelector('.scale__control--value');
 
 /**
  * @typedef {{
@@ -169,13 +168,13 @@ var renderActivePublicationHtmlElement = function (publication) {
 
 var openRedactorPressEscHandler = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
-    imageRedactorSection.classList.add('hidden');
+    imageEditorSection.classList.add('hidden');
     uploadFileOpen.value = '';
   }
 };
 
 var openRedactor = function () {
-  imageRedactorSection.classList.remove('hidden');
+  imageEditorSection.classList.remove('hidden');
   effectLevel.classList.add('hidden');
   document.addEventListener('keydown', openRedactorPressEscHandler);
   descriptionInput.addEventListener('focus', function () {
@@ -193,7 +192,7 @@ var openRedactor = function () {
 };
 
 var closeRedactor = function () {
-  imageRedactorSection.classList.add('hidden');
+  imageEditorSection.classList.add('hidden');
   document.removeEventListener('keydown', openRedactorPressEscHandler);
 };
 
@@ -316,6 +315,22 @@ var scalePostImagePreviewSmaller = function () {
   }
 };
 
+// применение фильтра к превью в редакторе, исходя из значения класса
+var applyCssFilterToImagePreview = function () {
+  if (postImagePreview.children[0].className === 'effects__preview--chrome') {
+    postImagePreview.children[0].style.filter = 'grayscale(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + ')';
+  } else if (postImagePreview.children[0].className === 'effects__preview--sepia') {
+    postImagePreview.children[0].style.filter = 'sepia(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + ')';
+  } else if (postImagePreview.children[0].className === 'effects__preview--marvin') {
+    postImagePreview.children[0].style.filter = 'invert(' + INVERT_MAX_VALUE / 100 * effectLevelValue.value + '%)';
+  } else if (postImagePreview.children[0].className === 'effects__preview--phobos') {
+    postImagePreview.children[0].style.filter = 'blur(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + 'px)';
+  } else if (postImagePreview.children[0].className === 'effects__preview--heat') {
+    postImagePreview.children[0].style.filter = 'brightness(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + ')';
+  } else {
+    postImagePreview.children[0].style.filter = '';
+  } return postImagePreview.children[0].style.filter;
+};
 
 createPublicationsArray(25);
 renderPublicationHtmlElements(publications);
@@ -332,13 +347,6 @@ uploadFileClose.addEventListener('click', closeRedactor);
 scaleControlBiggerButton.addEventListener('click', scalePostImagePreviewBigger);
 scaleControlSmallerButton.addEventListener('click', scalePostImagePreviewSmaller);
 
-// передвижение пина интенсивности фильтра
-effectLevelPin.addEventListener('mouseup', function (evt) {
-  var effectLevelLine = imageRedactorForm.querySelector('.effect-level__line'); // нашел весь слайдер
-  var effectLevelLineGeometricProperties = effectLevelLine.getBoundingClientRect(); // нашел все свойства слайдера как геометрического объекта
-  effectLevelValue.value = 100 * (evt.clientX - effectLevelLineGeometricProperties.x) / effectLevelLineGeometricProperties.width; // найду положение пина в процентом соотношении от начала слайдера
-});
-
 // наложение фильтров на картинку
 noneEffect.addEventListener('click', function () {
   effectLevel.classList.add('hidden');
@@ -348,31 +356,40 @@ chromeEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
   clearEffectsAndClassnameProperties();
   addEffectToImagePreview('chrome'); // накладываем св-во
-  postImagePreview.children[0].style.filter = 'grayscale(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + ')'; // записываем в св-во filter текущее значение индикатора интенсивности фильтра
+  applyCssFilterToImagePreview();
 });
 sepiaEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
   clearEffectsAndClassnameProperties();
   addEffectToImagePreview('sepia');
-  postImagePreview.children[0].style.filter = 'sepia(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + ')';
+  applyCssFilterToImagePreview();
 });
 marvinEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
   clearEffectsAndClassnameProperties();
   addEffectToImagePreview('marvin');
-  postImagePreview.children[0].style.filter = 'invert(' + INVERT_MAX_VALUE / 100 * effectLevelValue.value + '%)';
+  applyCssFilterToImagePreview();
 });
 phobosEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
   clearEffectsAndClassnameProperties();
   addEffectToImagePreview('phobos');
-  postImagePreview.children[0].style.filter = 'blur(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + 'px)';
+  applyCssFilterToImagePreview();
 });
 heatEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
   clearEffectsAndClassnameProperties();
   addEffectToImagePreview('heat');
-  postImagePreview.children[0].style.filter = 'brightness(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + ')';
+  applyCssFilterToImagePreview();
+});
+
+// передвижение пина интенсивности фильтра
+effectLevelPin.addEventListener('mouseup', function (evt) {
+  postImagePreview.children[0].style.filter = '';
+  var effectLevelLine = imageEditorForm.querySelector('.effect-level__line'); // нашел весь слайдер
+  var effectLevelLineGeometricProperties = effectLevelLine.getBoundingClientRect(); // нашел все свойства слайдера как геометрического объекта
+  effectLevelValue.value = 100 * (evt.clientX - effectLevelLineGeometricProperties.x) / effectLevelLineGeometricProperties.width; // найду положение пина в процентом соотношении от начала слайдера
+  applyCssFilterToImagePreview();
 });
 
 // проверка поля с хэштегами перед отправкой
