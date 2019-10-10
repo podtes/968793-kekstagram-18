@@ -6,6 +6,13 @@ var AUTHOR_DESCRIPTIONS = ['Классно посидели!', 'Вот тако�
 var LIKES_MIN = 15;
 var LIKES_MAX = 200;
 var ESC_KEYCODE = 27;
+var HASHTAGS_MAX = 5;
+var HASHTAG_MAX = 20;
+var SCALE_STEP = 25;
+var CHROME_AND_SEPIA_MAX_VALUE = 1;
+var INVERT_MAX_VALUE = 100;
+var PHOBOS_AND_HEAT_MAX_VALUE = 3;
+
 var pictureTemplate = document.querySelector('#picture')
   .content
   .querySelector('.picture');
@@ -35,7 +42,10 @@ var sepiaEffect = imageRedactorForm.querySelector('.effects__preview--sepia');
 var marvinEffect = imageRedactorForm.querySelector('.effects__preview--marvin');
 var phobosEffect = imageRedactorForm.querySelector('.effects__preview--phobos');
 var heatEffect = imageRedactorForm.querySelector('.effects__preview--heat');
-var isValidity;
+var valids = [];
+var scaleControlSmallerButton = imageRedactorForm.querySelector('.scale__control--smaller');
+var scaleControlBiggerButton = imageRedactorForm.querySelector('.scale__control--bigger');
+var scaleControlValue = imageRedactorForm.querySelector('.scale__control--value');
 
 /**
  * @typedef {{
@@ -195,9 +205,13 @@ var addEffectToImagePreview = function (effect) {
   postImagePreview.children[0].classList.add('effects__preview--' + effect);
 };
 
-var clearFilterAndClassnameProperties = function () {
+var clearEffectsAndClassnameProperties = function () {
+  scaleControlValue.value = '100%';
+  effectLevelValue.value = 100;
   postImagePreview.children[0].style.filter = '';
   postImagePreview.children[0].className = '';
+  postImagePreview.children[0].style.transform = 'scale(1)';
+
 };
 
 /**
@@ -212,19 +226,26 @@ var changeHashtagsToLowerCase = function (hashtagsArr) {
   return hashtagsArr;
 };
 
+// описание валидации для поля ввода хэштегов
+
 var checkCountOfHashtags = function (hashtagsArr) {
-  if (hashtagsArr.length > 5) {
-    isValidity = false;
-    console.log('много хэштегов');
+  if (hashtagsArr.length > HASHTAGS_MAX) {
+    valids[0] = false;
+  } else {
+    valids[0] = true;
   }
 };
 
 var checkFirstCharacterOfHashtags = function (hashtagsArr) {
-  for (var i = 0; i < hashtagsArr.length; i++) {
-    if (hashtagsArr[i].charAt(0) !== '#' || hashtagsArr[i] === '#') {
-      isValidity = false;
-      console.log('начинается не с # или состоит только из #');
-      break;
+  valids[1] = true;
+  if (hashtagsArr.length > 1) {
+    for (var i = 0; i < hashtagsArr.length; i++) {
+      if (hashtagsArr[i].charAt(0) !== '#' || hashtagsArr[i] === '#' || hashtagsArr[i].charAt(i + 1) === '#') {
+        valids[1] = false;
+        break;
+      } else {
+        valids[1] = true;
+      }
     }
   }
 };
@@ -233,22 +254,79 @@ var checkRepeatHashtags = function (hashtagsArr) {
   changeHashtagsToLowerCase(hashtagsArr);
   for (var i = 0; i < hashtagsArr.length; i++) {
     if (hashtagsArr.indexOf(hashtagsArr[i]) !== i) {
-      isValidity = false;
-      console.log('повторы');
+      valids[2] = false;
       break;
+    } else {
+      valids[2] = true;
     }
   }
 };
 
 var checkLengthOfHashtag = function (hashtagsArr) {
   for (var i = 0; i < hashtagsArr.length; i++) {
-    if (hashtagsArr[i].length > 20) {
-      isValidity = false;
-      console.log('длинный хэштег');
+    if (hashtagsArr[i].length > HASHTAG_MAX) {
+      valids[3] = false;
       break;
+    } else {
+      valids[3] = true;
     }
   }
 };
+
+var checkHashInWords = function (hashtagsArr) {
+  var i = 0;
+  valids[4] = true;
+  if (i < hashtagsArr.length) {
+    for (var j = 0; j < hashtagsArr[i].length; j++) {
+      if (hashtagsArr[i].charAt(0) === '#' && hashtagsArr[i].charAt(j + 1) === '#') {
+        valids[4] = false;
+        break;
+      } else {
+        valids[4] = true;
+      }
+    }
+    i++;
+  }
+};
+
+var validateHashtagsInput = function () {
+  if (valids[0] === false) {
+    hashtagsInput.setCustomValidity('Максимальное число хэштегов - 5');
+  } else if (valids[1] === false) {
+    hashtagsInput.setCustomValidity('Хэштег должен начинаться с # и не состоять только из #');
+  } else if (valids[2] === false) {
+    hashtagsInput.setCustomValidity('Хэштеги не должны повторяться');
+  } else if (valids[3] === false) {
+    hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов');
+  } else if (valids[4] === false) {
+    hashtagsInput.setCustomValidity('Хэштеги должны быть разделены пробелами');
+  } else {
+    hashtagsInput.setCustomValidity('');
+  }
+};
+
+var scalePostImagePreviewBigger = function () {
+  var scaleControlValueInNumber = +scaleControlValue.value.slice(0, -1);
+  if (scaleControlValueInNumber <= 75) {
+    scaleControlValueInNumber = scaleControlValueInNumber + SCALE_STEP;
+    scaleControlValue.value = scaleControlValueInNumber + '%';
+    postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / 100 + ')';
+  } else {
+    scaleControlValueInNumber = scaleControlValueInNumber;
+  }
+};
+
+var scalePostImagePreviewSmaller = function () {
+  var scaleControlValueInNumber = +scaleControlValue.value.slice(0, -1);
+  if (scaleControlValueInNumber >= 50) {
+    scaleControlValueInNumber = scaleControlValueInNumber - SCALE_STEP;
+    scaleControlValue.value = scaleControlValueInNumber + '%';
+    postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / 100 + ')';
+  } else {
+    scaleControlValueInNumber = scaleControlValueInNumber;
+  }
+};
+
 
 createPublicationsArray(25);
 renderPublicationHtmlElements(publications);
@@ -261,9 +339,14 @@ renderActivePublicationHtmlElement(publications[0]);
 uploadFileOpen.addEventListener('change', openRedactor);
 uploadFileClose.addEventListener('click', closeRedactor);
 
+// кнопки масштаба
+
+scaleControlBiggerButton.addEventListener('click', scalePostImagePreviewBigger);
+scaleControlSmallerButton.addEventListener('click', scalePostImagePreviewSmaller);
+
 // передвижение пина интенсивности фильтра
 
-effectLevelPin.addEventListener('mouseup', function (evt) { // срабатывает при отпускании кнопки мыши
+effectLevelPin.addEventListener('mouseup', function (evt) {
   var effectLevelLine = imageRedactorForm.querySelector('.effect-level__line'); // нашел весь слайдер
   var effectLevelLineGeometricProperties = effectLevelLine.getBoundingClientRect(); // нашел все свойства слайдера как геометрического объекта
   effectLevelValue.value = 100 * (evt.clientX - effectLevelLineGeometricProperties.x) / effectLevelLineGeometricProperties.width; // найду положение пина в процентом соотношении от начала слайдера
@@ -273,52 +356,47 @@ effectLevelPin.addEventListener('mouseup', function (evt) { // срабатыв�
 
 noneEffect.addEventListener('click', function () {
   effectLevel.classList.add('hidden');
-  clearFilterAndClassnameProperties();
+  clearEffectsAndClassnameProperties();
 });
 chromeEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
-  clearFilterAndClassnameProperties();
+  clearEffectsAndClassnameProperties();
   addEffectToImagePreview('chrome'); // накладываем св-во
-  postImagePreview.children[0].style.filter = 'grayscale(' + 1 / 100 * effectLevelValue.value + ')'; // записываем в св-во filter текущее значение индикатора интенсивности фильтра
+  postImagePreview.children[0].style.filter = 'grayscale(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + ')'; // записываем в св-во filter текущее значение индикатора интенсивности фильтра
 });
 sepiaEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
-  clearFilterAndClassnameProperties();
+  clearEffectsAndClassnameProperties();
   addEffectToImagePreview('sepia');
-  postImagePreview.children[0].style.filter = 'sepia(' + 1 / 100 * effectLevelValue.value + ')';
+  postImagePreview.children[0].style.filter = 'sepia(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + ')';
 });
 marvinEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
-  clearFilterAndClassnameProperties();
+  clearEffectsAndClassnameProperties();
   addEffectToImagePreview('marvin');
-  postImagePreview.children[0].style.filter = 'invert(' + 100 / 100 * effectLevelValue.value + '%)';
+  postImagePreview.children[0].style.filter = 'invert(' + INVERT_MAX_VALUE / 100 * effectLevelValue.value + '%)';
 });
 phobosEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
-  clearFilterAndClassnameProperties();
+  clearEffectsAndClassnameProperties();
   addEffectToImagePreview('phobos');
-  postImagePreview.children[0].style.filter = 'blur(' + 3 / 100 * effectLevelValue.value + 'px)';
+  postImagePreview.children[0].style.filter = 'blur(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + 'px)';
 });
 heatEffect.addEventListener('click', function () {
   effectLevel.classList.remove('hidden');
-  clearFilterAndClassnameProperties();
+  clearEffectsAndClassnameProperties();
   addEffectToImagePreview('heat');
-  postImagePreview.children[0].style.filter = 'brightness(' + 3 / 100 * effectLevelValue.value + ')';
+  postImagePreview.children[0].style.filter = 'brightness(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + ')';
 });
 
-// описание валидации для поля ввода хэштегов
+// проверки перед отправкой формы
 
-hashtagsInput.addEventListener('change', function () {
-  isValidity = true;
+imageRedactorForm.addEventListener('submit', function () {
   var hashtags = hashtagsInput.value.split(' ');
   checkCountOfHashtags(hashtags);
   checkFirstCharacterOfHashtags(hashtags);
   checkRepeatHashtags(hashtags);
   checkLengthOfHashtag(hashtags);
-});
-
-imageRedactorForm.addEventListener('submit', function (evt) {
-  if (!isValidity) {
-    evt.preventDefault();
-  }
+  checkHashInWords(hashtags);
+  validateHashtagsInput();
 });
