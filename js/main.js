@@ -388,7 +388,7 @@ effectLevelPin.addEventListener('mouseup', function (evt) {
   postImagePreview.children[0].style.filter = '';
   var effectLevelLine = imageEditorForm.querySelector('.effect-level__line'); // нашел весь слайдер
   var effectLevelLineGeometricProperties = effectLevelLine.getBoundingClientRect(); // нашел все свойства слайдера как геометрического объекта
-  effectLevelValue.value = 100 * (evt.clientX - effectLevelLineGeometricProperties.x) / effectLevelLineGeometricProperties.width; // найду положение пина в процентом соотношении от начала слайдера
+  effectLevelValue.value = Math.round(100 * (evt.clientX - effectLevelLineGeometricProperties.x) / effectLevelLineGeometricProperties.width); // найду положение пина в процентом соотношении от начала слайдера
   applyCssFilterToImagePreview();
 });
 
