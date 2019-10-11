@@ -166,34 +166,35 @@ var renderActivePublicationHtmlElement = function (publication) {
   renderCommentHtmlElements(publications[0]);
 };
 
-var openRedactorPressEscHandler = function (evt) {
+var openEditorPressEscHandler = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     imageEditorSection.classList.add('hidden');
     uploadFileOpen.value = '';
   }
 };
 
-var openRedactor = function () {
+var openEditor = function () {
   imageEditorSection.classList.remove('hidden');
   effectLevel.classList.add('hidden');
-  document.addEventListener('keydown', openRedactorPressEscHandler);
+  document.addEventListener('keydown', openEditorPressEscHandler);
   descriptionInput.addEventListener('focus', function () {
-    document.removeEventListener('keydown', openRedactorPressEscHandler);
+    document.removeEventListener('keydown', openEditorPressEscHandler);
   });
   descriptionInput.addEventListener('blur', function () {
-    document.addEventListener('keydown', openRedactorPressEscHandler);
+    document.addEventListener('keydown', openEditorPressEscHandler);
   });
   hashtagsInput.addEventListener('focus', function () {
-    document.removeEventListener('keydown', openRedactorPressEscHandler);
+    document.removeEventListener('keydown', openEditorPressEscHandler);
   });
   hashtagsInput.addEventListener('blur', function () {
-    document.addEventListener('keydown', openRedactorPressEscHandler);
+    document.addEventListener('keydown', openEditorPressEscHandler);
   });
 };
 
-var closeRedactor = function () {
+var closeEditor = function () {
   imageEditorSection.classList.add('hidden');
-  document.removeEventListener('keydown', openRedactorPressEscHandler);
+  clearEffectsAndClassnameProperties();
+  document.removeEventListener('keydown', openEditorPressEscHandler);
 };
 
 /**
@@ -210,60 +211,59 @@ var clearEffectsAndClassnameProperties = function () {
   postImagePreview.children[0].style.filter = '';
   postImagePreview.children[0].className = '';
   postImagePreview.children[0].style.transform = 'scale(1)';
-
 };
 
 /**
  *
- * @param{string[]} hashtagsArr
- * @return {string[]} hashtagsArr вернет массив строк в нижнем регистре
+ * @param{string[]} hashtags
+ * @return {string[]} hashtags вернет массив строк в нижнем регистре
  */
-var changeHashtagsToLowerCase = function (hashtagsArr) {
-  for (var i = 0; i < hashtagsArr.length; i++) {
-    hashtagsArr[i] = hashtagsArr[i].toLowerCase();
+var changeHashtagsToLowerCase = function (hashtags) {
+  for (var i = 0; i < hashtags.length; i++) {
+    hashtags[i] = hashtags[i].toLowerCase();
   }
-  return hashtagsArr;
+  return hashtags;
 };
 
 // описание валидации для поля ввода хэштегов
-var isCountOfHashtagsValid = function (hashtagsArr) {
-  if (hashtagsArr.length > HASHTAGS_MAX) {
+var isCountOfHashtagsValid = function (hashtags) {
+  if (hashtags.length > HASHTAGS_MAX) {
     return false;
   } else {
     return true;
   }
 };
-var isFirstCharacterOfHashtagsValid = function (hashtagsArr) {
-  if (hashtagsArr.length >= 1) {
-    for (var i = 0; i < hashtagsArr.length; i++) {
-      if (hashtagsArr[i].charAt(0) !== '#' || hashtagsArr[i] === '#') {
+var isFirstCharacterOfHashtagsValid = function (hashtags) {
+  if (hashtags.length >= 1) {
+    for (var i = 0; i < hashtags.length; i++) {
+      if (hashtags[i].charAt(0) !== '#' || hashtags[i] === '#') {
         return false;
       }
     }
   }
   return true;
 };
-var isRepeatHashtagsValid = function (hashtagsArr) {
-  changeHashtagsToLowerCase(hashtagsArr);
-  for (var i = 0; i < hashtagsArr.length; i++) {
-    if (hashtagsArr.indexOf(hashtagsArr[i]) !== i) {
+var isRepeatHashtagsValid = function (hashtags) {
+  changeHashtagsToLowerCase(hashtags);
+  for (var i = 0; i < hashtags.length; i++) {
+    if (hashtags.indexOf(hashtags[i]) !== i) {
       return false;
     }
   }
   return true;
 };
-var isLengthOfHashtagValid = function (hashtagsArr) {
-  for (var i = 0; i < hashtagsArr.length; i++) {
-    if (hashtagsArr[i].length > HASHTAG_MAX) {
+var isLengthOfHashtagValid = function (hashtags) {
+  for (var i = 0; i < hashtags.length; i++) {
+    if (hashtags[i].length > HASHTAG_MAX) {
       return false;
     }
   }
   return true;
 };
-var isHashInWordsValid = function (hashtagsArr) {
-  for (var i = 0; i < hashtagsArr.length; i++) {
-    for (var j = 0; j < hashtagsArr[i].length; j++) {
-      if (hashtagsArr[i].charAt(0) === '#' && hashtagsArr[i].charAt(j + 1) === '#') {
+var isHashInWordsValid = function (hashtags) {
+  for (var i = 0; i < hashtags.length; i++) {
+    for (var j = 0; j < hashtags[i].length; j++) {
+      if (hashtags[i].charAt(0) === '#' && hashtags[i].charAt(j + 1) === '#') {
         return false;
       }
     }
@@ -273,11 +273,6 @@ var isHashInWordsValid = function (hashtagsArr) {
 var validateHashtagsInput = function () {
   hashtagsInput.setCustomValidity('');
   var hashtags = hashtagsInput.value.split(' ');
-  isCountOfHashtagsValid(hashtags);
-  isRepeatHashtagsValid(hashtags);
-  isFirstCharacterOfHashtagsValid(hashtags);
-  isLengthOfHashtagValid(hashtags);
-  isHashInWordsValid(hashtags);
   if (!isCountOfHashtagsValid(hashtags)) {
     hashtagsInput.setCustomValidity('Максимальное число хэштегов - 5');
   } else if (!isRepeatHashtagsValid(hashtags)) {
@@ -324,7 +319,7 @@ var applyCssFilterToImagePreview = function () {
   } else if (postImagePreview.children[0].className === 'effects__preview--marvin') {
     postImagePreview.children[0].style.filter = 'invert(' + INVERT_MAX_VALUE / 100 * effectLevelValue.value + '%)';
   } else if (postImagePreview.children[0].className === 'effects__preview--phobos') {
-    postImagePreview.children[0].style.filter = 'blur(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + 'px)';
+    postImagePreview.children[0].style.filter = 'blur(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + 'px)';
   } else if (postImagePreview.children[0].className === 'effects__preview--heat') {
     postImagePreview.children[0].style.filter = 'brightness(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + ')';
   } else {
@@ -340,8 +335,8 @@ renderActivePublicationHtmlElement(publications[0]);
 
 // bigPictureSection.classList.remove('hidden');
 
-uploadFileOpen.addEventListener('change', openRedactor);
-uploadFileClose.addEventListener('click', closeRedactor);
+uploadFileOpen.addEventListener('change', openEditor);
+uploadFileClose.addEventListener('click', closeEditor);
 
 // кнопки масштаба
 scaleControlBiggerButton.addEventListener('click', scalePostImagePreviewBigger);
