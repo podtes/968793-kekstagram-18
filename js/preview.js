@@ -11,10 +11,6 @@
   var likesCount = bigPictureSection.querySelector('.likes-count');
   var commentsCount = bigPictureSection.querySelector('.comments-count');
 
-  var hideElement = function (element) {
-    element.classList.add('visually-hidden');
-  };
-
   /**
   * Функция присваивает полям выбранного пользователем поста значения из публикации
   * @param {Publication} publication объект, содержащий необходимые данные для генерации активной публикации
@@ -42,9 +38,10 @@
     }
   };
 
-  hideElement(commentsCounter);
-  hideElement(commentsLoader);
-  renderActivePublicationHtmlElement(window.data.publications[0]);
+  window.preview = {
+    commentsCounter: commentsCounter,
+    commentsLoader: commentsLoader,
+    renderActivePublicationHtmlElement: renderActivePublicationHtmlElement
+  };
 
-  // bigPictureSection.classList.remove('hidden');
-  })();
+})();

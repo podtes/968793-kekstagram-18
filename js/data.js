@@ -11,11 +11,6 @@
     .content
     .querySelector('.picture');
 
-  window.data = {
-    publications: publications
-  };
-
-
   /**
   * @typedef {{
   * url: string,
@@ -29,69 +24,45 @@
   * }} Publication
   */
 
-  var getRandomIntFromInterval = function (min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-  /**
-  * Функция возвращает случайный элемент массива
-  * @param {*[]} arr массив, из которого будем выбирать случайный элемент
-  * @return {*} randomValue случайный элемент массива
-  */
-  var getRandomArrayElement = function (arr) {
-  var randomValue = arr[Math.floor(Math.random() * arr.length)];
-  return randomValue;
-};
-
   /**
   * Функция создает объект, который описывает публикацию
   * @param {number} photoNumber порядковый номер файла с фотографией
   * @return {Publication} publication объект с данными для генерациии публикации
   */
   var createPublicationObject = function (photoNumber) {
-  var publication = {
-    url: './photos/' + photoNumber + '.jpg',
-    description: getRandomArrayElement(AUTHOR_DESCRIPTIONS),
-    likes: getRandomIntFromInterval(LIKES_MIN, LIKES_MAX),
-    comments: [{
-      avatar: './img/avatar-' + getRandomIntFromInterval(1, 6) + '.svg',
-      message: getRandomArrayElement(AUTHOR_COMMENTS),
-      name: getRandomArrayElement(AUTHOR_NAMES)
-    },
+    var publication = {
+      url: './photos/' + photoNumber + '.jpg',
+      description: window.utils.getRandomArrayElement(AUTHOR_DESCRIPTIONS),
+      likes: window.utils.getRandomIntFromInterval(LIKES_MIN, LIKES_MAX),
+      comments: [{
+        avatar: './img/avatar-' + window.utils.getRandomIntFromInterval(1, 6) + '.svg',
+        message: window.utils.getRandomArrayElement(AUTHOR_COMMENTS),
+        name: window.utils.getRandomArrayElement(AUTHOR_NAMES)
+      },
       {
-        avatar: './img/avatar-' + getRandomIntFromInterval(1, 6) + '.svg',
-        message: getRandomArrayElement(AUTHOR_COMMENTS),
-        name: getRandomArrayElement(AUTHOR_NAMES)
+        avatar: './img/avatar-' + window.utils.getRandomIntFromInterval(1, 6) + '.svg',
+        message: window.utils.getRandomArrayElement(AUTHOR_COMMENTS),
+        name: window.utils.getRandomArrayElement(AUTHOR_NAMES)
       }]
+    };
+    return publication;
   };
-  return publication;
-};
 
   /**
   * @param {number} arraySize нужное количество элементов массива
   * @return {Publication[]}
   */
   var createPublicationsArray = function (arraySize) {
-  for (var i = 0; i < arraySize; i++) {
-    publications[i] = createPublicationObject(i + 1);
-  }
-  return publications;
-};
-
-  /**
-  * Функция генерирует DOM элемент на основе шаблона pictureTemplate
-  * @param {Publication} publication
-  * @return {Node} возвращает сгенерированный DOM элемент
-  */
-
-  window.data.generatePublicationHtmlElement = function (publication) {
-    var pictureElement = pictureTemplate.cloneNode(true);
-    pictureElement.querySelector('.picture__img').src = publication.url;
-    pictureElement.querySelector('.picture__likes').textContent = publication.likes;
-    pictureElement.querySelector('.picture__comments').textContent = publication.comments.length;
-
-    return pictureElement;
+    for (var i = 0; i < arraySize; i++) {
+      publications[i] = createPublicationObject(i + 1);
+    }
+    return publications;
   };
 
-  createPublicationsArray(25);
+  window.data = {
+    publications: publications,
+    pictureTemplate: pictureTemplate,
+    createPublicationsArray: createPublicationsArray
+  };
+
 })();
