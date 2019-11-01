@@ -41,7 +41,8 @@
   window.preview = {
     commentsCounter: commentsCounter,
     commentsLoader: commentsLoader,
-    renderActivePublicationHtmlElement: renderActivePublicationHtmlElement
+    renderActivePublicationHtmlElement: renderActivePublicationHtmlElement,
+    bigPictureSection: bigPictureSection
   };
 
 })();

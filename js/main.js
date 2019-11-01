@@ -60,4 +60,6 @@
 
   window.form.hashtagsInput.addEventListener('input', window.form.validateHashtagsInput);
 
+  window.preview.bigPictureSection.classList.remove('hidden');
+
 })();
