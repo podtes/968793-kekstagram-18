@@ -17,12 +17,12 @@
   * @return {void}
   */
   var renderActivePublicationHtmlElement = function (publication) {
-    bigPictureImg.src = publication.url;
-    likesCount.textContent = publication.likes;
-    commentsCount.textContent = publication.comments.length;
-    pictureDescription.textContent = publication.description;
+    bigPictureImg.src = publication[0].url;
+    likesCount.textContent = publication[0].likes;
+    commentsCount.textContent = publication[0].comments.length;
+    pictureDescription.textContent = publication[0].description;
 
-    renderCommentHtmlElements(window.data.publications[0]);
+    renderCommentHtmlElements(publication[0]);
   };
 
   /**

@@ -2,9 +2,7 @@
 
 (function () {
 
-  // window.data.createPublicationsArray(25);
-  window.load(window.gallery.renderPublicationHtmlElements);
-  // window.gallery.renderPublicationHtmlElements(window.data.publications);
+  window.load(window.gallery.renderPublicationHtmlElements, window.error.showErrorWindow);
   window.load(window.preview.renderActivePublicationHtmlElement);
 
   window.utils.hideElement(window.preview.commentsCounter);
@@ -59,7 +57,5 @@
   });
 
   window.form.hashtagsInput.addEventListener('input', window.form.validateHashtagsInput);
-
-  window.preview.bigPictureSection.classList.remove('hidden');
 
 })();
