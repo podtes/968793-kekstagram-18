@@ -3,7 +3,7 @@
 (function () {
 
   window.load(window.gallery.renderPublicationHtmlElements, window.error.showErrorWindow);
-  window.load(window.preview.renderActivePublicationHtmlElement);
+  // window.load(window.preview.renderActivePublicationHtmlElement);
 
   window.utils.hideElement(window.preview.commentsCounter);
   window.utils.hideElement(window.preview.commentsLoader);
