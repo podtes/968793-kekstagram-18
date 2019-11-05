@@ -17,6 +17,8 @@
   var effectLevel = imageEditorForm.querySelector('.img-upload__effect-level');
   var effectLevelPin = imageEditorForm.querySelector('.effect-level__pin');
   var effectLevelValue = imageEditorForm.querySelector('.effect-level__value');
+  var effectLevelLine = imageEditorForm.querySelector('.effect-level__line');
+  var effectLevelDepth = effectLevelLine.querySelector('.effect-level__depth');
   var hashtagsInput = imageEditorForm.querySelector('.text__hashtags');
   var descriptionInput = imageEditorForm.querySelector('.text__description');
   var noneEffect = imageEditorForm.querySelector('.effects__preview--none');
@@ -70,6 +72,8 @@
   var clearEffectsAndClassnameProperties = function () {
     scaleControlValue.value = '100%';
     effectLevelValue.value = 100;
+    effectLevelDepth.style.width = '100%';
+    effectLevelPin.style.left = '100%';
     postImagePreview.children[0].style.filter = '';
     postImagePreview.children[0].className = '';
     postImagePreview.children[0].style.transform = 'scale(1)';
@@ -219,6 +223,8 @@
     phobosEffect: phobosEffect,
     heatEffect: heatEffect,
     effectLevel: effectLevel,
+    effectLevelLine: effectLevelLine,
+    effectLevelDepth: effectLevelDepth,
     clearEffectsAndClassnameProperties: clearEffectsAndClassnameProperties,
     addEffectToImagePreview: addEffectToImagePreview,
     applyCssFilterToImagePreview: applyCssFilterToImagePreview,
