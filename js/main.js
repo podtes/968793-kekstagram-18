@@ -71,7 +71,7 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-});
+  });
 
   window.form.hashtagsInput.addEventListener('input', window.form.validateHashtagsInput);
 
