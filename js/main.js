@@ -2,9 +2,8 @@
 
 (function () {
 
-  window.data.createPublicationsArray(25);
-  window.gallery.renderPublicationHtmlElements(window.data.publications);
-  window.preview.renderActivePublicationHtmlElement(window.data.publications[0]);
+  window.load(window.gallery.renderPublicationHtmlElements, window.error.showErrorWindow);
+  // window.load(window.preview.renderActivePublicationHtmlElement);
 
   window.utils.hideElement(window.preview.commentsCounter);
   window.utils.hideElement(window.preview.commentsLoader);
