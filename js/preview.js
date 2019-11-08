@@ -11,6 +11,22 @@
   var likesCount = bigPictureSection.querySelector('.likes-count');
   var commentsCount = bigPictureSection.querySelector('.comments-count');
   var smallPictures;
+  var bigPictureClose = bigPictureSection.querySelector('.big-picture__cancel');
+
+
+  var openPreviewPressEscHandler = function (evt) {
+    if (evt.keyCode === window.form.ESC_KEYCODE) {
+      bigPictureSection.classList.add('hidden');
+    }
+  };
+  var openPreview = function () {
+    bigPictureSection.classList.remove('.hidden');
+    document.addEventListener('keydown', openPreviewPressEscHandler);
+  };
+  var closePreview = function () {
+    bigPictureSection.classList.add('hidden');
+    document.removeEventListener('keydown', openPreviewPressEscHandler);
+  };
 
   /**
   * Функция присваивает полям выбранного пользователем поста значения из публикации
@@ -18,11 +34,10 @@
   * @return {void}
   */
   var renderActivePublicationHtmlElement = function (publication) {
-    bigPicture.childNodes[1].src = publication.childNodes[1].src;
-    likesCount.textContent = publication.childNodes[3].childNodes[3].textContent;
-    commentsCount.textContent = publication.childNodes[3].childNodes[1].textContent;
-
-    renderCommentHtmlElements(publication[0]);
+    bigPicture.childNodes[1].src = publication.url;
+    likesCount.textContent = publication.likes;
+    commentsCount.textContent = publication.comments.length;
+    renderCommentHtmlElements(publication);
   };
 
   /**
@@ -38,18 +53,20 @@
     }
   };
 
-  var showActivePublicationHtmlElement = function () {
+  /**
+   * Функция показывает слой с полноразмерной картинкой по превью которой кликнул пользователь
+   * @param {[]} publicationsArr массив с данными, из которых формируются публикации
+   * @return {void}
+   */
+
+  var showActivePublicationHtmlElement = function (publicationsArr) {
     smallPictures = document.querySelectorAll('.picture');
-
-    for (var i = 0; i < smallPictures.length; i++) {
-
-      // почему не получается навесить ивент листенеры на все картинки в ходе выполнения цикла?
-      smallPictures[4].addEventListener('click', function () {
-        bigPictureSection.classList.remove('hidden');
-        renderActivePublicationHtmlElement(smallPictures[4]); // как в ккчестве параметра функции передать массив с сервера?
-        // информацию для рендера большой картинки наверное нужно брать из массива с объектами, который приходит с сервера? а то я попробовал хотя бы чуть сделать из данных html элементов
-      })
-    }
+    // Мне кажется код ниже нужно обернуть в цикл и добавить ивент листенер ко всем элементам коллекции smallPictures, но в таком случае все перестает работать.
+    smallPictures[0].addEventListener('click', function () {
+      bigPictureSection.classList.remove('hidden');
+      renderActivePublicationHtmlElement(publicationsArr[0]);
+      openPreview();
+    });
   };
 
 
@@ -58,7 +75,9 @@
     commentsLoader: commentsLoader,
     renderActivePublicationHtmlElement: renderActivePublicationHtmlElement,
     bigPictureSection: bigPictureSection,
-    showActivePublicationHtmlElement: showActivePublicationHtmlElement
+    showActivePublicationHtmlElement: showActivePublicationHtmlElement,
+    bigPictureClose: bigPictureClose,
+    closePreview: closePreview
   };
 
 })();

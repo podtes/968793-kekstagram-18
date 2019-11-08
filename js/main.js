@@ -4,6 +4,8 @@
 
   window.load(window.gallery.renderPublicationHtmlElements, window.error.showWindow);
 
+  window.preview.bigPictureClose.addEventListener('click', window.preview.closePreview);
+
   window.utils.hideElement(window.preview.commentsCounter);
   window.utils.hideElement(window.preview.commentsLoader);
 
