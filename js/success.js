@@ -26,7 +26,6 @@
     successButton.addEventListener('click', deleteSuccessWindowClickHandler);
     document.addEventListener('keydown', deleteSuccessWindowPressEscHandler);
     document.addEventListener('click', deleteSuccessWindowClickHandler);
-
   };
 
 })();
