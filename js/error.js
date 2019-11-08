@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  window.error.showErrorWindow = function () {
+  window.error.showWindow = function () {
     var errorWindow = document.querySelector('#error')
       .content
       .querySelector('.error');

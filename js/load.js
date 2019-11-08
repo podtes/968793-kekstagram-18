@@ -10,6 +10,7 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onSuccess(xhr.response);
+        window.preview.showActivePublicationHtmlElement();
       } else {
         onError();
       }
