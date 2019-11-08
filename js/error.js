@@ -1,10 +1,11 @@
 'use strict';
 
 (function () {
+
+  var errorWindow = window.data.errorWindowTemplate.cloneNode(true);
+
   window.error.showWindow = function () {
-    var errorWindow = document.querySelector('#error')
-      .content
-      .querySelector('.error');
+    window.form.closeEditor();
     document.querySelector('.pictures').appendChild(errorWindow);
   };
 })();

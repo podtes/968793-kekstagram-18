@@ -61,7 +61,7 @@
 
   var showActivePublicationHtmlElement = function (publicationsArr) {
     smallPictures = document.querySelectorAll('.picture');
-    // Мне кажется код ниже нужно обернуть в цикл и добавить ивент листенер ко всем элементам коллекции smallPictures, но в таком случае все перестает работать.
+
     smallPictures[0].addEventListener('click', function () {
       bigPictureSection.classList.remove('hidden');
       renderActivePublicationHtmlElement(publicationsArr[0]);

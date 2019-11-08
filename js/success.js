@@ -1,25 +1,32 @@
 'use strict';
 
 (function () {
+  var successWindow = window.data.successWindowTemplate.cloneNode(true);
 
   window.success.showWindow = function () {
-    var successWindow = document.querySelector('#success')
-      .content
-      .querySelector('.success');
-    document.querySelector('.pictures').appendChild(successWindow);
-    var successButton = document.querySelector('.success__button');
-
     window.form.closeEditor();
-    successButton.addEventListener('click', function () {
-      successWindow.parentNode.removeChild(successWindow);
-    });
+    document.querySelector('.pictures').appendChild(successWindow);
 
-    document.addEventListener('keydown', function (evt) {
-      evt.preventDefault();
+    var successButton = document.querySelector('.success__button');
+    var deleteSuccessWindowClickHandler = function () {
+      successWindow.parentNode.removeChild(successWindow);
+      successButton.removeEventListener('click', deleteSuccessWindowClickHandler);
+      document.removeEventListener('keydown', deleteSuccessWindowPressEscHandler);
+      document.removeEventListener('click', deleteSuccessWindowClickHandler);
+    };
+    var deleteSuccessWindowPressEscHandler = function (evt) {
       if (evt.keyCode === window.form.ESC_KEYCODE) {
         successWindow.parentNode.removeChild(successWindow);
+        successButton.removeEventListener('click', deleteSuccessWindowClickHandler);
+        document.removeEventListener('keydown', deleteSuccessWindowPressEscHandler);
+        document.removeEventListener('click', deleteSuccessWindowClickHandler);
       }
-    });
+    };
+
+    successButton.addEventListener('click', deleteSuccessWindowClickHandler);
+    document.addEventListener('keydown', deleteSuccessWindowPressEscHandler);
+    document.addEventListener('click', deleteSuccessWindowClickHandler);
+
   };
 
 })();
