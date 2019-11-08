@@ -3,7 +3,7 @@
 (function () {
   var URL = 'https://js.dump.academy/kekstagram/data';
 
-  window.load = function (onSuccess, onError) {
+  window.loadPublications = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 

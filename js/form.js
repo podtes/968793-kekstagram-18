@@ -207,6 +207,8 @@
     return postImagePreview.children[0].style.filter;
   };
 
+
+
   window.form = {
     openEditor: openEditor,
     closeEditor: closeEditor,
