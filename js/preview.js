@@ -7,7 +7,7 @@
   var commentsLoader = bigPictureSection.querySelector('.comments-loader');
   var commentListItems = bigPictureSection.querySelectorAll('.social__comment');
   var likesCount = bigPictureSection.querySelector('.likes-count');
-  var description = bigPictureSection.querySelector('.social__caption');
+  var pictureDescription = bigPictureSection.querySelector('.social__caption');
   var commentsCount = bigPictureSection.querySelector('.comments-count');
   var smallPictures;
   var bigPictureClose = bigPictureSection.querySelector('.big-picture__cancel');
@@ -35,7 +35,7 @@
   var renderActivePublicationHtmlElement = function (publication) {
     bigPicture.childNodes[1].src = publication.url;
     likesCount.textContent = publication.likes;
-    description.textContent = publication.description;
+    pictureDescription.textContent = publication.description;
     commentsCount.textContent = publication.comments.length;
     renderCommentHtmlElements(publication);
   };
