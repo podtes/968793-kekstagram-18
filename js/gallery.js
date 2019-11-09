@@ -17,6 +17,17 @@
   };
 
   /**
+   * Функция присваивает атрибут каждому DOM элементу из коллекции
+   * @return {void}
+   */
+  var assignAttributeToPreviewPicture = function () {
+    var previewsPictures = document.querySelectorAll('.picture__img');
+    for (var i = 0; i < previewsPictures.length; i++) {
+      previewsPictures[i].setAttribute('data-id', i + 1)
+    }
+  };
+
+  /**
    * @param {Publication[]} publicationsArr
    * @return {void}
    */
@@ -26,10 +37,10 @@
       fragment.appendChild(generatePublicationHtmlElement(publicationsArr[i]));
     }
     document.querySelector('.pictures').appendChild(fragment);
+    assignAttributeToPreviewPicture();
   };
 
   window.gallery = {
     renderPublicationHtmlElements: renderPublicationHtmlElements
   };
-
 })();
