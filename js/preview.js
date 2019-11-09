@@ -3,16 +3,15 @@
 (function () {
   var bigPictureSection = document.querySelector('.big-picture');
   var bigPicture = bigPictureSection.querySelector('.big-picture__img');
-  var bigPictureImg = bigPicture.children[0];
   var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
   var commentsLoader = bigPictureSection.querySelector('.comments-loader');
-  var pictureDescription = bigPictureSection.querySelector('.social__caption');
   var commentListItems = bigPictureSection.querySelectorAll('.social__comment');
   var likesCount = bigPictureSection.querySelector('.likes-count');
+  var description = bigPictureSection.querySelector('.social__caption');
   var commentsCount = bigPictureSection.querySelector('.comments-count');
   var smallPictures;
   var bigPictureClose = bigPictureSection.querySelector('.big-picture__cancel');
-
+  var picturesContainer = document.querySelector('.pictures');
 
   var openPreviewPressEscHandler = function (evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
@@ -36,6 +35,7 @@
   var renderActivePublicationHtmlElement = function (publication) {
     bigPicture.childNodes[1].src = publication.url;
     likesCount.textContent = publication.likes;
+    description.textContent = publication.description;
     commentsCount.textContent = publication.comments.length;
     renderCommentHtmlElements(publication);
   };
@@ -60,12 +60,16 @@
    */
 
   var showActivePublicationHtmlElement = function (publicationsArr) {
-    smallPictures = document.querySelectorAll('.picture');
-    // Мне кажется код ниже нужно обернуть в цикл и добавить ивент листенер ко всем элементам коллекции smallPictures, но в таком случае все перестает работать.
-    smallPictures[0].addEventListener('click', function () {
-      bigPictureSection.classList.remove('hidden');
-      renderActivePublicationHtmlElement(publicationsArr[0]);
-      openPreview();
+    smallPictures = document.querySelectorAll('.picture__img');
+
+    picturesContainer.addEventListener('click', function (evt) {
+      for (var i = 0; i < smallPictures.length; i++) {
+        if (evt.target === smallPictures[i]) {
+          bigPictureSection.classList.remove('hidden');
+          renderActivePublicationHtmlElement(publicationsArr[i]);
+          openPreview();
+        }
+      }
     });
   };
 
