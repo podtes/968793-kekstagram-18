@@ -60,6 +60,9 @@
 
   var showActivePublicationHtmlElement = function (publicationsArr) {
     picturesContainer.addEventListener('click', function (evt) {
+      if (evt.target === document.querySelector('.img-upload__start') || evt.target === document.querySelector('.img-upload__label') || evt.target === document.querySelector('.img-upload__input')) {
+        evt.target.stopImmediatePropagation();
+      }
       bigPictureSection.classList.remove('hidden');
       renderActivePublicationHtmlElement(publicationsArr[evt.target.dataset.id]);
       openPreview();
