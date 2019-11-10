@@ -60,9 +60,8 @@
 
   var showActivePublicationHtmlElement = function (publicationsArr) {
     picturesContainer.addEventListener('click', function (evt) {
-      if (evt.target === document.querySelector('.img-upload__start') || evt.target === document.querySelector('.img-upload__label') || evt.target === document.querySelector('.img-upload__input') || evt.target === document.querySelector('.pictures')) {
-        evt.target.stopPropagation();
-        console.log(evt.target);
+      if (evt.target === document.querySelector('.img-upload__start') || evt.target === document.querySelector('.img-upload__label') || evt.target === document.querySelector('.img-upload__input') || evt.target === document.querySelector('.pictures') || evt.target === document.querySelector('.img-upload__submit')) {
+        evt.stopPropagation();
       } else {
         bigPictureSection.classList.remove('hidden');
         renderActivePublicationHtmlElement(publicationsArr[evt.target.dataset.id]);
