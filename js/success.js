@@ -8,18 +8,19 @@
     document.querySelector('.pictures').appendChild(successWindow);
 
     var successButton = document.querySelector('.success__button');
-    var deleteSuccessWindowClickHandler = function () {
+
+    var deleteSuccessWindowAndListenersHandler = function () {
       successWindow.parentNode.removeChild(successWindow);
       successButton.removeEventListener('click', deleteSuccessWindowClickHandler);
       document.removeEventListener('keydown', deleteSuccessWindowPressEscHandler);
       document.removeEventListener('click', deleteSuccessWindowClickHandler);
     };
+    var deleteSuccessWindowClickHandler = function () {
+      deleteSuccessWindowAndListenersHandler();
+    };
     var deleteSuccessWindowPressEscHandler = function (evt) {
       if (evt.keyCode === window.form.ESC_KEYCODE) {
-        successWindow.parentNode.removeChild(successWindow);
-        successButton.removeEventListener('click', deleteSuccessWindowClickHandler);
-        document.removeEventListener('keydown', deleteSuccessWindowPressEscHandler);
-        document.removeEventListener('click', deleteSuccessWindowClickHandler);
+        deleteSuccessWindowAndListenersHandler();
       }
     };
 

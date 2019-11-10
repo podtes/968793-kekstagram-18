@@ -14,17 +14,17 @@
       } else {
         window.error.showWindow();
       }
-
-      xhr.addEventListener('error', function () {
-        window.error.showWindow();
-      });
-
-      xhr.addEventListener('timeout', function () {
-        window.error.showWindow();
-      });
     });
 
-    xhr.timeout = 10000;
+    xhr.addEventListener('error', function () {
+      window.error.showWindow();
+    });
+
+    xhr.addEventListener('timeout', function () {
+      window.error.showWindow();
+    });
+
+    xhr.timeout = 10;
 
     xhr.open('POST', URL);
     xhr.send(data);
