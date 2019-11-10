@@ -3,10 +3,8 @@
 (function () {
   var bigPictureSection = document.querySelector('.big-picture');
   var bigPicture = bigPictureSection.querySelector('.big-picture__img');
-  var bigPictureImg = bigPicture.children[0];
   var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
   var commentsLoader = bigPictureSection.querySelector('.comments-loader');
-  var pictureDescription = bigPictureSection.querySelector('.social__caption');
   var commentListItems = bigPictureSection.querySelectorAll('.social__comment');
   var likesCount = bigPictureSection.querySelector('.likes-count');
   var commentsCount = bigPictureSection.querySelector('.comments-count');

@@ -8,8 +8,8 @@
    */
   var addEventListenersToErrorButtons = function (buttons, eventListener) {
     for (var i = 0; i < buttons.length; i++) {
-      buttons[i].addEventListener('click', eventListener)
-    };
+      buttons[i].addEventListener('click', eventListener);
+    }
   };
 
   var errorWindow = window.data.errorWindowTemplate.cloneNode(true);
