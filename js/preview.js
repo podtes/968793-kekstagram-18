@@ -9,7 +9,6 @@
   var likesCount = bigPictureSection.querySelector('.likes-count');
   var pictureDescription = bigPictureSection.querySelector('.social__caption');
   var commentsCount = bigPictureSection.querySelector('.comments-count');
-  var smallPictures;
   var bigPictureClose = bigPictureSection.querySelector('.big-picture__cancel');
   var picturesContainer = document.querySelector('.pictures');
 
@@ -60,16 +59,10 @@
    */
 
   var showActivePublicationHtmlElement = function (publicationsArr) {
-    smallPictures = document.querySelectorAll('.picture__img');
-
     picturesContainer.addEventListener('click', function (evt) {
-      for (var i = 0; i < smallPictures.length; i++) {
-        if (evt.target === smallPictures[i]) {
-          bigPictureSection.classList.remove('hidden');
-          renderActivePublicationHtmlElement(publicationsArr[i]);
-          openPreview();
-        }
-      }
+      bigPictureSection.classList.remove('hidden');
+      renderActivePublicationHtmlElement(publicationsArr[evt.target.dataset.id]);
+      openPreview();
     });
   };
 
