@@ -233,7 +233,8 @@
     imageEditorForm: imageEditorForm,
     effectLevelValue: effectLevelValue,
     hashtagsInput: hashtagsInput,
-    validateHashtagsInput: validateHashtagsInput
+    validateHashtagsInput: validateHashtagsInput,
+    ESC_KEYCODE: ESC_KEYCODE
   };
 
 })();

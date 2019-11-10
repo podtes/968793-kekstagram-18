@@ -3,13 +3,14 @@
 (function () {
   var URL = 'https://js.dump.academy/kekstagram/data';
 
-  window.load = function (onSuccess, onError) {
+  window.loadPublications = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onSuccess(xhr.response);
+        window.preview.showActivePublicationHtmlElement(xhr.response);
       } else {
         onError();
       }
@@ -25,6 +26,7 @@
 
     xhr.open('GET', URL);
     xhr.send();
+
   };
 
 })();

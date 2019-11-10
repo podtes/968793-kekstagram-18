@@ -6,6 +6,14 @@
     .content
     .querySelector('.picture');
 
+  var successWindowTemplate = document.querySelector('#success')
+    .content
+    .querySelector('.success');
+
+  var errorWindowTemplate = document.querySelector('#error')
+    .content
+    .querySelector('.error');
+
   /**
   * @typedef {{
   * url: string,
@@ -20,7 +28,9 @@
   */
 
   window.data = {
-    pictureTemplate: pictureTemplate
+    pictureTemplate: pictureTemplate,
+    successWindowTemplate: successWindowTemplate,
+    errorWindowTemplate: errorWindowTemplate
   };
 
 })();
