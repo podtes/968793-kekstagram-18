@@ -77,5 +77,4 @@
   });
 
   window.form.hashtagsInput.addEventListener('input', window.form.validateHashtagsInput);
-
 })();

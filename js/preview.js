@@ -45,10 +45,15 @@
   * @return {void}
   */
   var renderCommentHtmlElements = function (publication) {
-    for (var i = 0; i < commentListItems.length; i++) {
-      commentListItems[i].children[0].src = publication.comments[i].avatar;
-      commentListItems[i].children[0].alt = publication.comments[i].name;
-      commentListItems[i].children[1].textContent = publication.comments[i].message;
+    if (publication.comments.length === 1) {
+      window.utils.hideElement(commentListItems[1]);
+    } else {
+      window.utils.showElement(commentListItems[1]);
+      for (var i = 0; i < commentListItems.length; i++) {
+        commentListItems[i].children[0].src = publication.comments[i].avatar;
+        commentListItems[i].children[0].alt = publication.comments[i].name;
+        commentListItems[i].children[1].textContent = publication.comments[i].message;
+      }
     }
   };
 
