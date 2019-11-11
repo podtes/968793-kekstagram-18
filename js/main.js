@@ -2,7 +2,7 @@
 
 (function () {
 
-  window.load(window.gallery.renderPublicationHtmlElements, window.error.showWindow);
+  window.loadPublications(window.gallery.renderPublicationHtmlElements, window.error.showWindow);
 
   window.preview.bigPictureClose.addEventListener('click', window.preview.closePreview);
 
@@ -77,4 +77,10 @@
   });
 
   window.form.hashtagsInput.addEventListener('input', window.form.validateHashtagsInput);
+
+  window.form.imageEditorForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.uploadPublication(new FormData(window.form.imageEditorForm), window.success.showWindow);
+  });
+
 })();
