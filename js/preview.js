@@ -60,12 +60,12 @@
 
   var showActivePublicationHtmlElement = function (publicationsArr) {
     picturesContainer.addEventListener('click', function (evt) {
-      if (evt.target === document.querySelector('.img-upload__start') || evt.target === document.querySelector('.img-upload__label') || evt.target === document.querySelector('.img-upload__input') || evt.target === document.querySelector('.pictures') || evt.target === document.querySelector('.img-upload__submit')) {
-        evt.stopPropagation();
-      } else {
+      if (evt.target.classList.contains('picture__img') && evt.target.dataset.id !== undefined) {
         bigPictureSection.classList.remove('hidden');
         renderActivePublicationHtmlElement(publicationsArr[evt.target.dataset.id]);
         openPreview();
+      } else {
+        evt.stopPropagation();
       }
     });
   };
