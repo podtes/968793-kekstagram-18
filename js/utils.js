@@ -20,15 +20,10 @@
     element.classList.add('visually-hidden');
   };
 
-  var showElement = function (element) {
-    element.classList.remove('visually-hidden');
-  };
-
   window.utils = {
     getRandomIntFromInterval: getRandomIntFromInterval,
     getRandomArrayElement: getRandomArrayElement,
-    hideElement: hideElement,
-    showElement: showElement
+    hideElement: hideElement
   };
 
 })();

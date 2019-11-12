@@ -45,15 +45,10 @@
   * @return {void}
   */
   var renderCommentHtmlElements = function (publication) {
-    if (publication.comments.length === 1) {
-      window.utils.hideElement(commentListItems[1]);
-    } else {
-      window.utils.showElement(commentListItems[1]);
-      for (var i = 0; i < commentListItems.length; i++) {
-        commentListItems[i].children[0].src = publication.comments[i].avatar;
-        commentListItems[i].children[0].alt = publication.comments[i].name;
-        commentListItems[i].children[1].textContent = publication.comments[i].message;
-      }
+    for (var i = 0; i < commentListItems.length && i < publication.comments.length; i++) {
+      commentListItems[i].children[0].src = publication.comments[i].avatar;
+      commentListItems[i].children[0].alt = publication.comments[i].name;
+      commentListItems[i].children[1].textContent = publication.comments[i].message;
     }
   };
 
@@ -71,6 +66,14 @@
         openPreview();
       } else {
         evt.stopPropagation();
+      }
+    });
+
+    picturesContainer.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target.children[0].classList.contains('picture__img') && evt.target.children[0].dataset.id !== undefined) {
+        bigPictureSection.classList.remove('hidden');
+        renderActivePublicationHtmlElement(publicationsArr[evt.target.children[0].dataset.id]);
+        openPreview();
       }
     });
   };

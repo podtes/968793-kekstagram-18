@@ -82,5 +82,4 @@
     evt.preventDefault();
     window.uploadPublication(new FormData(window.form.imageEditorForm), window.success.showWindow);
   });
-
 })();
