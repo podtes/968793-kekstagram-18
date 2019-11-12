@@ -16,7 +16,7 @@
 
   window.error.showWindow = function () {
     window.form.closeEditor();
-    document.querySelector('.pictures').appendChild(errorWindow);
+    document.querySelector('main').appendChild(errorWindow);
 
     var errorButtons = document.querySelectorAll('.error__button');
 

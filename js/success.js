@@ -5,7 +5,7 @@
 
   window.success.showWindow = function () {
     window.form.closeEditor();
-    document.querySelector('.pictures').appendChild(successWindow);
+    document.querySelector('main').appendChild(successWindow);
 
     var successButton = document.querySelector('.success__button');
 

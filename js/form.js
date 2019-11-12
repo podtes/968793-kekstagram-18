@@ -2,6 +2,7 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+  var ENTER_KEYCODE = 13;
   var HASHTAGS_MAX = 5;
   var HASHTAG_MAX = 20;
   var SCALE_STEP = 25;
@@ -234,6 +235,7 @@
     effectLevelValue: effectLevelValue,
     hashtagsInput: hashtagsInput,
     validateHashtagsInput: validateHashtagsInput,
+    ENTER_KEYCODE: ENTER_KEYCODE,
     ESC_KEYCODE: ESC_KEYCODE
   };
 

@@ -7,10 +7,10 @@
   var commentsLoader = bigPictureSection.querySelector('.comments-loader');
   var commentListItems = bigPictureSection.querySelectorAll('.social__comment');
   var likesCount = bigPictureSection.querySelector('.likes-count');
+  var pictureDescription = bigPictureSection.querySelector('.social__caption');
   var commentsCount = bigPictureSection.querySelector('.comments-count');
-  var smallPictures;
   var bigPictureClose = bigPictureSection.querySelector('.big-picture__cancel');
-
+  var picturesContainer = document.querySelector('.pictures');
 
   var openPreviewPressEscHandler = function (evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
@@ -34,6 +34,7 @@
   var renderActivePublicationHtmlElement = function (publication) {
     bigPicture.childNodes[1].src = publication.url;
     likesCount.textContent = publication.likes;
+    pictureDescription.textContent = publication.description;
     commentsCount.textContent = publication.comments.length;
     renderCommentHtmlElements(publication);
   };
@@ -44,7 +45,7 @@
   * @return {void}
   */
   var renderCommentHtmlElements = function (publication) {
-    for (var i = 0; i < commentListItems.length; i++) {
+    for (var i = 0; i < commentListItems.length && i < publication.comments.length; i++) {
       commentListItems[i].children[0].src = publication.comments[i].avatar;
       commentListItems[i].children[0].alt = publication.comments[i].name;
       commentListItems[i].children[1].textContent = publication.comments[i].message;
@@ -58,12 +59,22 @@
    */
 
   var showActivePublicationHtmlElement = function (publicationsArr) {
-    smallPictures = document.querySelectorAll('.picture');
+    picturesContainer.addEventListener('click', function (evt) {
+      if (evt.target.classList.contains('picture__img') && evt.target.dataset.id !== undefined) {
+        bigPictureSection.classList.remove('hidden');
+        renderActivePublicationHtmlElement(publicationsArr[evt.target.dataset.id]);
+        openPreview();
+      } else {
+        evt.stopPropagation();
+      }
+    });
 
-    smallPictures[0].addEventListener('click', function () {
-      bigPictureSection.classList.remove('hidden');
-      renderActivePublicationHtmlElement(publicationsArr[0]);
-      openPreview();
+    picturesContainer.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target.children[0].classList.contains('picture__img') && evt.target.children[0].dataset.id !== undefined) {
+        bigPictureSection.classList.remove('hidden');
+        renderActivePublicationHtmlElement(publicationsArr[evt.target.children[0].dataset.id]);
+        openPreview();
+      }
     });
   };
 
