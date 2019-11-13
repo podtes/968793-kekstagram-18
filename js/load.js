@@ -10,7 +10,23 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onSuccess(xhr.response);
-        window.preview.showActivePublicationHtmlElement(xhr.response);
+        window.filters.show();
+
+        window.filters.randomPublicationsButton.addEventListener('click', function () {
+          window.filters.toggleActiveClassAtFilterButtons(window.filters.randomPublicationsButton, window.filters.discussedPublicationsButton, window.filters.popularPublicationsButton);
+          window.gallery.deletePublicationHtmlElements();
+          onSuccess(window.utils.getNoRepeatRandomElementsArray(xhr.response, 10));
+        });
+        window.filters.discussedPublicationsButton.addEventListener('click', function () {
+          window.filters.toggleActiveClassAtFilterButtons(window.filters.discussedPublicationsButton, window.filters.randomPublicationsButton, window.filters.popularPublicationsButton);
+          window.gallery.deletePublicationHtmlElements();
+          onSuccess(window.filters.sortArrayByCommentsCount(xhr.response));
+        });
+        window.filters.popularPublicationsButton.addEventListener('click', function () {
+          window.filters.toggleActiveClassAtFilterButtons(window.filters.popularPublicationsButton, window.filters.randomPublicationsButton, window.filters.discussedPublicationsButton);
+          window.gallery.deletePublicationHtmlElements();
+          onSuccess(xhr.response);
+        });
       } else {
         onError();
       }

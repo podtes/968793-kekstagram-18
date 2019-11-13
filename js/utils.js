@@ -10,10 +10,28 @@
   * @param {*[]} arr массив, из которого будем выбирать случайный элемент
   * @return {*} randomValue случайный элемент массива
   */
-
   var getRandomArrayElement = function (arr) {
     var randomValue = arr[Math.floor(Math.random() * arr.length)];
     return randomValue;
+  };
+
+  /**
+   * Функция возвращает массив неповторяющихся случайных элементов из другого массива
+   * @param {*[]} arr массив, из которого будет выбирать случайные эелементы
+   * @param {number} countOfElements нужное нам количество неповторяющихся случайных элементов
+   * @return {[]} randomArrElements массив случайных неповторяющихся элементов
+   */
+  var getNoRepeatRandomElementsArray = function (arr, countOfElements) {
+    var randomArrElements = [];
+    for (var i = 0; i < countOfElements;) {
+      randomArrElements.push(window.utils.getRandomArrayElement(arr));
+      if (randomArrElements.indexOf(randomArrElements[i]) !== i) {
+        randomArrElements.pop();
+      } else {
+        i++;
+      }
+    }
+    return randomArrElements;
   };
 
   var hideElement = function (element) {
@@ -23,7 +41,8 @@
   window.utils = {
     getRandomIntFromInterval: getRandomIntFromInterval,
     getRandomArrayElement: getRandomArrayElement,
-    hideElement: hideElement
+    getNoRepeatRandomElementsArray: getNoRepeatRandomElementsArray,
+    hideElement: hideElement,
   };
 
 })();
