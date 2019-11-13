@@ -30,7 +30,18 @@
     document.querySelector('.pictures').appendChild(fragment);
   };
 
+  /**
+   * @return {void}
+   */
+  var deletePublicationHtmlElements = function () {
+    var smallPreviews = document.getElementsByClassName('picture');
+    while (smallPreviews[0]) {
+      smallPreviews[0].parentNode.removeChild(smallPreviews[0]);
+    }
+  };
+
   window.gallery = {
-    renderPublicationHtmlElements: renderPublicationHtmlElements
+    renderPublicationHtmlElements: renderPublicationHtmlElements,
+    deletePublicationHtmlElements: deletePublicationHtmlElements
   };
 })();

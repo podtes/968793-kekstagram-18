@@ -10,7 +10,6 @@
   * @param {*[]} arr массив, из которого будем выбирать случайный элемент
   * @return {*} randomValue случайный элемент массива
   */
-
   var getRandomArrayElement = function (arr) {
     var randomValue = arr[Math.floor(Math.random() * arr.length)];
     return randomValue;
@@ -23,7 +22,7 @@
   window.utils = {
     getRandomIntFromInterval: getRandomIntFromInterval,
     getRandomArrayElement: getRandomArrayElement,
-    hideElement: hideElement
+    hideElement: hideElement,
   };
 
 })();

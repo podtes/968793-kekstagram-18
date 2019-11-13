@@ -11,6 +11,16 @@
       if (xhr.status === 200) {
         onSuccess(xhr.response);
         window.preview.showActivePublicationHtmlElement(xhr.response);
+        window.filters.showFilters();
+
+        window.filters.randomPublicationsButton.addEventListener('click', function () {
+          window.gallery.deletePublicationHtmlElements();
+          onSuccess(window.filters.getNoRepeatRandomElementsArray(xhr.response, 10));
+        });
+        window.filters.discussedPublicationsButton.addEventListener('click', function () {
+          window.gallery.deletePublicationHtmlElements();
+          onSuccess(window.filters.sortArrayByCommentsCount(xhr.response));
+        });
       } else {
         onError();
       }
