@@ -6,28 +6,8 @@
   var randomPublicationsButton = document.getElementById('filter-random');
   var discussedPublicationsButton = document.getElementById('filter-discussed');
 
-  var showFilters = function () {
+  var show = function () {
     filters.classList.remove('img-filters--inactive');
-  };
-
-  /**
-   * Функция возвращает массив неповторяющихся случайных элементов из другого массива
-   * @param {*[]} arr массив, из которого будет выбирать случайные эелементы
-   * @param {number} countOfElements нужное нам количество неповторяющихся случайных элементов
-   * @return {[]} randomArrElements массив случайных неповторяющихся элементов
-   */
-  var getNoRepeatRandomElementsArray = function (arr, countOfElements) {
-    var randomArrElements = [];
-    for (var i = 0; i < countOfElements;) {
-      randomArrElements.push(window.utils.getRandomArrayElement(arr));
-      if (randomArrElements.indexOf(randomArrElements[i]) !== i) {
-        i = i;
-        randomArrElements.pop();
-      } else {
-        i++;
-      }
-    }
-    return randomArrElements;
   };
 
   /**
@@ -37,20 +17,31 @@
    */
   var sortArrayByCommentsCount = function (arr) {
     var arrCopy = arr.slice();
-    arrCopy.sort (function (a, b) {
-      return a.comments.length - b.comments.length;
-    })
+    arrCopy.sort(function (a, b) {
+      return b.comments.length - a.comments.length;
+    });
     return arrCopy;
   };
 
+  /**
+   * @param {Node} activeButton
+   * @param {Node} passiveButton1
+   * @param {Node} passiveButton2
+   * @return {void}
+   */
+  var toggleActiveClassAtFilterButtons = function (activeButton, passiveButton1, passiveButton2) {
+    activeButton.classList.add('img-filters__button--active');
+    passiveButton1.classList.remove('img-filters__button--active');
+    passiveButton2.classList.remove('img-filters__button--active');
+  };
 
+  window.filters = {
+    show: show,
+    popularPublicationsButton: popularPublicationsButton,
+    randomPublicationsButton: randomPublicationsButton,
+    discussedPublicationsButton: discussedPublicationsButton,
+    sortArrayByCommentsCount: sortArrayByCommentsCount,
+    toggleActiveClassAtFilterButtons: toggleActiveClassAtFilterButtons,
+  };
 
-    window.filters = {
-      showFilters: showFilters,
-      popularPublicationsButton: popularPublicationsButton,
-      randomPublicationsButton: randomPublicationsButton,
-      discussedPublicationsButton: discussedPublicationsButton,
-      getNoRepeatRandomElementsArray: getNoRepeatRandomElementsArray,
-      sortArrayByCommentsCount: sortArrayByCommentsCount
-    }
 })();

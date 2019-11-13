@@ -28,15 +28,16 @@
       fragment.appendChild(generatePublicationHtmlElement(publicationsArr[i], i));
     }
     document.querySelector('.pictures').appendChild(fragment);
+    window.preview.showActivePublicationHtmlElement(publicationsArr);
   };
 
   /**
    * @return {void}
    */
   var deletePublicationHtmlElements = function () {
-    var smallPreviews = document.getElementsByClassName('picture');
-    while (smallPreviews[0]) {
-      smallPreviews[0].parentNode.removeChild(smallPreviews[0]);
+    var smallPreviews = document.querySelectorAll('.picture');
+    for (var i = 0; i < smallPreviews.length; i++) {
+      smallPreviews[i].parentNode.removeChild(smallPreviews[i]);
     }
   };
 
