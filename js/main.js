@@ -6,9 +6,6 @@
 
   window.preview.bigPictureClose.addEventListener('click', window.preview.closePreview);
 
-  window.utils.hideElement(window.preview.commentsCounter);
-  window.utils.hideElement(window.preview.commentsLoader);
-
   window.form.uploadFileOpen.addEventListener('change', window.form.openEditor);
   window.form.uploadFileClose.addEventListener('click', window.form.closeEditor);
   window.form.scaleControlBiggerButton.addEventListener('click', window.form.scalePostImagePreviewBigger);
