@@ -12,38 +12,21 @@
   var commentsCount = bigPictureSection.querySelector('.comments-count');
   var bigPictureClose = bigPictureSection.querySelector('.big-picture__cancel');
   var picturesContainer = document.querySelector('.pictures');
+  var commentsForRender = [];
 
   var openPreviewPressEscHandler = function (evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
       bigPictureSection.classList.add('hidden');
     }
   };
-  var loadCounterClickHandler = function () {
-    var noShowComments = commentList.querySelectorAll('.visually-hidden');
-    for (var i = 0; i < 5 && i < noShowComments.length; i++) {
-      window.utils.showElement(noShowComments[i]);
-    }
-    if (noShowComments.length <= 5) {
-      window.utils.hideElement(commentsLoader);
-    }
-  };
-
   var openPreview = function () {
     bigPictureSection.classList.remove('.hidden');
     document.addEventListener('keydown', openPreviewPressEscHandler);
-    commentsLoader.addEventListener('click', loadCounterClickHandler);
-    var noShowComments = commentList.querySelectorAll('.visually-hidden');
-    if (noShowComments.length === 0) {
-      window.utils.hideElement(commentsLoader);
-    }
   };
-
   var closePreview = function () {
     while (commentList.firstChild) {
       commentList.removeChild(commentList.firstChild);
     }
-    window.utils.showElement(commentsLoader);
-    commentsLoader.removeEventListener('click', loadCounterClickHandler);
     bigPictureSection.classList.add('hidden');
     document.removeEventListener('keydown', openPreviewPressEscHandler);
   };
@@ -54,40 +37,43 @@
   * @return {void}
   */
   var renderActivePublicationHtmlElement = function (publication) {
+    while (commentList.firstChild) {
+      commentList.removeChild(commentList.firstChild);
+    }
     bigPicture.childNodes[1].src = publication.url;
     likesCount.textContent = publication.likes;
     pictureDescription.textContent = publication.description;
     commentsCount.textContent = publication.comments.length;
-    renderCommentHtmlElement(publication);
+    createAndRenderCommentHtmlElements(publication);
   };
 
-  /**
-  *
-  * @param {Publication} publication
-  * @return {void}
-  */
-  var renderCommentHtmlElement = function (publication) {
-    while (commentList.firstChild) {
-      commentList.removeChild(commentList.firstChild);
-    }
-    for (var i = 0; i < publication.comments.length; i++) {
-      var commentItem = commentListItem.cloneNode(true);
-      commentList.appendChild(commentItem);
-      commentItem.querySelector('.social__picture').src = publication.comments[i].avatar;
-      commentItem.querySelector('.social__picture').alt = publication.comments[i].name;
-      commentItem.querySelector('.social__text').textContent = publication.comments[i].message;
-      if (i > 4) {
-        window.utils.hideElement(commentItem);
-      }
-    }
+
+
+  var getArrayForRenderComments = function (publication) {
+    commentsForRender = publication.comments.slice(0, 5);
+    console.log(commentsForRender);
   };
+
+
+  var createAndRenderCommentHtmlElements = function (publication) {
+    getArrayForRenderComments(publication);
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < commentsForRender.length; i++) {
+      var newComment = commentListItem.cloneNode(true);
+      newComment.querySelector('.social__picture').src = commentsForRender[i].avatar;
+      newComment.querySelector('.social__picture').alt = commentsForRender[i].name;
+      newComment.querySelector('.social__text').textContent = commentsForRender[i].message;
+      fragment.appendChild(newComment);
+    }
+    commentList.appendChild(fragment);
+  };
+
 
   /**
    * Функция показывает слой с полноразмерной картинкой по превью которой кликнул пользователь
    * @param {[]} publicationsArr массив с данными, из которых формируются публикации
    * @return {void}
    */
-
   var showActivePublicationHtmlElement = function (publicationsArr) {
     picturesContainer.addEventListener('click', function (evt) {
       if (evt.target.classList.contains('picture__img') && evt.target.dataset.id !== undefined) {
