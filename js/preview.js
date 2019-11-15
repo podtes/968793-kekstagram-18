@@ -17,6 +17,9 @@
   var openPreviewPressEscHandler = function (evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
       bigPictureSection.classList.add('hidden');
+      while (commentList.firstChild) {
+        commentList.removeChild(commentList.firstChild);
+      }
     }
   };
   var openPreview = function () {
@@ -24,11 +27,9 @@
     document.addEventListener('keydown', openPreviewPressEscHandler);
   };
   var closePreview = function () {
-    while (commentList.firstChild) {
-      commentList.removeChild(commentList.firstChild);
-    }
     bigPictureSection.classList.add('hidden');
     document.removeEventListener('keydown', openPreviewPressEscHandler);
+    commentsCounter.textContent = '';
   };
 
   /**
@@ -37,26 +38,47 @@
   * @return {void}
   */
   var renderActivePublicationHtmlElement = function (publication) {
+    var startCount = 0;
+    var finishCount = 5;
+    window.utils.showElement(commentsLoader);
+
     while (commentList.firstChild) {
       commentList.removeChild(commentList.firstChild);
     }
+
     bigPicture.childNodes[1].src = publication.url;
     likesCount.textContent = publication.likes;
     pictureDescription.textContent = publication.description;
     commentsCount.textContent = publication.comments.length;
-    createAndRenderCommentHtmlElements(publication);
+    createAndRenderCommentHtmlElements(publication, startCount, finishCount);
+
+    if (publication.comments.length < 5) {
+      window.utils.hideElement(commentsLoader);
+      commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
+    }
+
+    commentsLoader.addEventListener('click', function () {
+      var notRenderedElemensLeft = publication.comments.length - finishCount;
+      if (notRenderedElemensLeft >= 5) {
+        startCount += 5;
+        finishCount += 5;
+        commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
+        createAndRenderCommentHtmlElements(publication, startCount, finishCount);
+      } else if (notRenderedElemensLeft >= 0) {
+        startCount += 5;
+        finishCount += notRenderedElemensLeft;
+        commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
+        createAndRenderCommentHtmlElements(publication, startCount, finishCount);
+        window.utils.hideElement(commentsLoader);
+      }
+    });
   };
 
-
-
-  var getArrayForRenderComments = function (publication) {
-    commentsForRender = publication.comments.slice(0, 5);
-    console.log(commentsForRender);
+  var getArrayForRenderComments = function (publication, startCount, finishCount) {
+    commentsForRender = publication.comments.slice(startCount, finishCount);
   };
-
-
-  var createAndRenderCommentHtmlElements = function (publication) {
-    getArrayForRenderComments(publication);
+  var createAndRenderCommentHtmlElements = function (publication, startCount, finishCount) {
+    getArrayForRenderComments(publication, startCount, finishCount);
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < commentsForRender.length; i++) {
       var newComment = commentListItem.cloneNode(true);
