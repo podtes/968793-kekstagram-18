@@ -17,9 +17,6 @@
   var openPreviewPressEscHandler = function (evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
       bigPictureSection.classList.add('hidden');
-      while (commentList.firstChild) {
-        commentList.removeChild(commentList.firstChild);
-      }
     }
   };
   var openPreview = function () {
@@ -49,13 +46,14 @@
     likesCount.textContent = publication.likes;
     pictureDescription.textContent = publication.description;
     commentsCount.textContent = publication.comments.length;
-    commentsCounter.textContent = '5 из ' + commentsCount.textContent + ' комментариев';
-    createAndRenderCommentHtmlElements(publication, startCount, finishCount);
-
     if (publication.comments.length < 5) {
       window.utils.hideElement(commentsLoader);
       commentsCounter.textContent = publication.comments.length + ' из ' + publication.comments.length + ' комментариев';
+    } else {
+      commentsCounter.textContent = '5 из ' + commentsCount.textContent + ' комментариев';
     }
+
+    createAndRenderCommentHtmlElements(publication, startCount, finishCount);
 
     commentsLoader.addEventListener('click', function () {
       var notRenderedElemensLeft = publication.comments.length - finishCount;
@@ -100,8 +98,8 @@
     picturesContainer.addEventListener('click', function (evt) {
       if (evt.target.classList.contains('picture__img') && evt.target.dataset.id !== undefined) {
         bigPictureSection.classList.remove('hidden');
-        renderActivePublicationHtmlElement(publicationsArr[evt.target.dataset.id]);
         openPreview();
+        renderActivePublicationHtmlElement(publicationsArr[evt.target.dataset.id]);
       } else {
         evt.stopPropagation();
       }
