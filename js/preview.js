@@ -29,7 +29,6 @@
   var closePreview = function () {
     bigPictureSection.classList.add('hidden');
     document.removeEventListener('keydown', openPreviewPressEscHandler);
-    commentsCounter.textContent = '';
   };
 
   /**
@@ -50,11 +49,12 @@
     likesCount.textContent = publication.likes;
     pictureDescription.textContent = publication.description;
     commentsCount.textContent = publication.comments.length;
+    commentsCounter.textContent = '5 из ' + commentsCount.textContent + ' комментариев';
     createAndRenderCommentHtmlElements(publication, startCount, finishCount);
 
     if (publication.comments.length < 5) {
       window.utils.hideElement(commentsLoader);
-      commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
+      commentsCounter.textContent = publication.comments.length + ' из ' + publication.comments.length + ' комментариев';
     }
 
     commentsLoader.addEventListener('click', function () {
