@@ -36,9 +36,10 @@
   var renderActivePublicationHtmlElement = function (publication) {
     var startCount = 0;
     var finishCount = 5;
-    var publicationCommentsFromServer = publication.comments.length;
+    var publicationCommentsFromServer = publication.comments;
+
     var commentsLoaderClickHandler = function () {
-      var notRenderedElemensLeft = publicationCommentsFromServer - finishCount;
+      var notRenderedElemensLeft = publicationCommentsFromServer.length - finishCount;
       if (notRenderedElemensLeft > 5) {
         startCount += 5;
         finishCount += 5;
@@ -63,16 +64,18 @@
     likesCount.textContent = publication.likes;
     pictureDescription.textContent = publication.description;
     commentsCount.textContent = publication.comments.length;
-    if (publication.comments.length < 5) {
+
+    if (publication.comments.length < finishCount) {
       window.utils.hideElement(commentsLoader);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
       commentsCounter.textContent = publication.comments.length + ' из ' + publication.comments.length + ' комментариев';
     } else {
+      window.utils.showElement(commentsLoader);
+      commentsLoader.addEventListener('click', commentsLoaderClickHandler);
       commentsCounter.textContent = '5 из ' + commentsCount.textContent + ' комментариев';
     }
 
     createAndRenderCommentHtmlElements(publication, startCount, finishCount);
-    commentsLoader.addEventListener('click', commentsLoaderClickHandler);
   };
 
   var getArrayForRenderComments = function (publication, startCount, finishCount) {
