@@ -30,6 +30,7 @@
       } else {
         onError();
       }
+
     });
     xhr.addEventListener('error', function () {
       onError();
@@ -42,7 +43,5 @@
 
     xhr.open('GET', URL);
     xhr.send();
-
   };
-
 })();

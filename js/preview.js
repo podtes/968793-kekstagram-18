@@ -13,6 +13,8 @@
   var bigPictureClose = bigPictureSection.querySelector('.big-picture__cancel');
   var picturesContainer = document.querySelector('.pictures');
   var commentsForRender = [];
+  var startCount = 0;
+  var finishCount = 5;
 
   var openPreviewPressEscHandler = function (evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
@@ -26,7 +28,28 @@
   var closePreview = function () {
     bigPictureSection.classList.add('hidden');
     document.removeEventListener('keydown', openPreviewPressEscHandler);
+    commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
   };
+
+  var commentsLoaderClickHandler = function () {
+    var notRenderedElemensLeft = window.preview.publicationData.comments.length - finishCount;
+    if (notRenderedElemensLeft > 5) {
+      startCount += 5;
+      finishCount += 5;
+      commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
+      createAndRenderCommentHtmlElements(window.preview.publicationData, startCount, finishCount);
+    } else if (notRenderedElemensLeft >= 0) {
+      startCount += 5;
+      finishCount += notRenderedElemensLeft;
+      commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
+      createAndRenderCommentHtmlElements(window.preview.publicationData, startCount, finishCount);
+      window.utils.hideElement(commentsLoader);
+      commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
+      startCount = 0;
+      finishCount = 5;
+    }
+  };
+
 
   /**
   * Функция присваивает полям выбранного пользователем поста значения из публикации
@@ -34,26 +57,7 @@
   * @return {void}
   */
   var renderActivePublicationHtmlElement = function (publication) {
-    var startCount = 0;
-    var finishCount = 5;
-    var publicationCommentsFromServer = publication.comments;
 
-    var commentsLoaderClickHandler = function () {
-      var notRenderedElemensLeft = publicationCommentsFromServer.length - finishCount;
-      if (notRenderedElemensLeft > 5) {
-        startCount += 5;
-        finishCount += 5;
-        commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
-        createAndRenderCommentHtmlElements(publication, startCount, finishCount);
-      } else if (notRenderedElemensLeft >= 0) {
-        startCount += 5;
-        finishCount += notRenderedElemensLeft;
-        commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
-        createAndRenderCommentHtmlElements(publication, startCount, finishCount);
-        window.utils.hideElement(commentsLoader);
-        commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-      }
-    };
     window.utils.showElement(commentsLoader);
 
     while (commentList.firstChild) {
@@ -76,6 +80,10 @@
     }
 
     createAndRenderCommentHtmlElements(publication, startCount, finishCount);
+
+    window.preview = {
+      publicationData: publication
+    };
   };
 
   var getArrayForRenderComments = function (publication, startCount, finishCount) {
