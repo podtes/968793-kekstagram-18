@@ -20,6 +20,7 @@
     if (evt.keyCode === window.form.ESC_KEYCODE) {
       bigPictureSection.classList.add('hidden');
     }
+    commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
   };
   var openPreview = function () {
     bigPictureSection.classList.remove('.hidden');
@@ -45,11 +46,8 @@
       createAndRenderCommentHtmlElements(window.preview.publicationData, startCount, finishCount);
       window.utils.hideElement(commentsLoader);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-      startCount = 0;
-      finishCount = 5;
     }
   };
-
 
   /**
   * Функция присваивает полям выбранного пользователем поста значения из публикации
@@ -57,7 +55,8 @@
   * @return {void}
   */
   var renderActivePublicationHtmlElement = function (publication) {
-
+    startCount = 0;
+    finishCount = 5;
     window.utils.showElement(commentsLoader);
 
     while (commentList.firstChild) {
