@@ -45,19 +45,19 @@
   var closePreviewClickHandler = function (evt) {
     if (evt.target.classList.contains('picture__img') && evt.target.dataset.id !== undefined) {
       openPreview();
-      renderActivePublicationHtmlElement(window.publications[evt.target.dataset.id]);
+      renderActivePublicationHtmlElement(window.preview.publications[evt.target.dataset.id]);
+      picturesContainer.removeEventListener('click', closePreviewClickHandler);
     } else {
       evt.stopPropagation();
     }
-    picturesContainer.removeEventListener('click', closePreviewClickHandler);
   };
   var closePreviewPressEnterHandler = function (evt) {
     if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target.children[0].classList.contains('picture__img') && evt.target.children[0].dataset.id !== undefined) {
       bigPictureSection.classList.remove('hidden');
-      renderActivePublicationHtmlElement(window.publications[evt.target.children[0].dataset.id]);
       openPreview();
+      renderActivePublicationHtmlElement(window.preview.publications[evt.target.children[0].dataset.id]);
+      picturesContainer.removeEventListener('keydown', closePreviewPressEnterHandler);
     }
-    picturesContainer.removeEventListener('click', closePreviewPressEnterHandler);
   };
   var openPreview = function () {
     bigPictureSection.classList.remove('hidden');
@@ -108,6 +108,7 @@
   var renderActivePublicationHtmlElement = function (publication) {
     START_COUNT = 0;
     FINISH_COUNT = 5;
+    window.preview.publicationData = publication;
     window.utils.showElement(commentsLoader);
 
     while (commentList.firstChild) {
@@ -130,10 +131,6 @@
     }
 
     createAndRenderCommentHtmlElements(publication, START_COUNT, FINISH_COUNT);
-
-    window.preview = {
-      publicationData: publication
-    };
   };
 
   /**
@@ -141,11 +138,11 @@
    * @param {[]} publicationsArr массив с данными, из которых формируются публикации
    * @return {void}
    */
-  window.showActivePublicationHtmlElement = function (publicationsArr) {
+  var showActivePublicationHtmlElement = function (publicationsArr) {
     picturesContainer.addEventListener('click', closePreviewClickHandler);
     picturesContainer.addEventListener('keydown', closePreviewPressEnterHandler);
 
-    window.publications = publicationsArr;
+    window.preview.publications = publicationsArr;
   };
 
 
@@ -153,10 +150,13 @@
     commentsCounter: commentsCounter,
     commentsLoader: commentsLoader,
     renderActivePublicationHtmlElement: renderActivePublicationHtmlElement,
-    bigPictureSection: bigPictureSection,
     showActivePublicationHtmlElement: showActivePublicationHtmlElement,
+    bigPictureSection: bigPictureSection,
     bigPictureClose: bigPictureClose,
-    closePreview: closePreview
+    closePreview: closePreview,
+    closePreviewClickHandler: closePreviewClickHandler,
+    closePreviewPressEnterHandler: closePreviewPressEnterHandler,
+    picturesContainer: picturesContainer
   };
 
 })();

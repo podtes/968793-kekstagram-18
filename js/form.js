@@ -35,8 +35,7 @@
 
   var openEditorPressEscHandler = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      imageEditorSection.classList.add('hidden');
-      uploadFileOpen.value = '';
+      closeEditor();
     }
   };
   var openEditor = function () {
@@ -55,11 +54,14 @@
     hashtagsInput.addEventListener('blur', function () {
       document.addEventListener('keydown', openEditorPressEscHandler);
     });
+    window.preview.picturesContainer.removeEventListener('keydown', window.preview.closePreviewPressEnterHandler);
   };
   var closeEditor = function () {
     imageEditorSection.classList.add('hidden');
     clearEffectsAndClassnameProperties();
     document.removeEventListener('keydown', openEditorPressEscHandler);
+    window.preview.picturesContainer.addEventListener('click', window.preview.closePreviewClickHandler);
+    window.preview.picturesContainer.addEventListener('keydown', window.preview.closePreviewPressEnterHandler);
   };
 
   /**
@@ -71,6 +73,7 @@
   };
 
   var clearEffectsAndClassnameProperties = function () {
+    uploadFileOpen.value = '';
     scaleControlValue.value = '100%';
     effectLevelValue.value = 100;
     effectLevelDepth.style.width = '100%';
