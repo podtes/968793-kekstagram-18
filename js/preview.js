@@ -32,7 +32,6 @@
       createAndRenderCommentHtmlElements(window.preview.publicationData, START_COUNT, FINISH_COUNT);
       window.utils.hideElement(commentsLoader);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-      commentsLoader.removeEventListener('keydown', commentsLoaderPressEnterHandler);
     }
   };
 
@@ -40,7 +39,7 @@
     if (evt.keyCode === window.form.ESC_KEYCODE) {
       bigPictureSection.classList.add('hidden');
       removeEventListener('keydown', openPreviewPressEscHandler);
-      commentsLoader.removeEventListener('keydown', commentsLoaderPressEnterHandler);
+      // commentsLoader.removeEventListener('keydown', commentsLoaderPressEnterHandler);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
     }
     picturesContainer.addEventListener('click', closePreviewClickHandler);
@@ -48,12 +47,6 @@
   };
   var commentsLoaderClickHandler = function () {
     showMoreComments();
-  };
-  var commentsLoaderPressEnterHandler = function (evt) {
-    if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target === commentsLoader) {
-      // showMoreComments();
-      console.log('kek!');
-    }
   };
   var closePreviewClickHandler = function (evt) {
     if (evt.target.classList.contains('picture__img') && evt.target.dataset.id !== undefined) {
@@ -80,7 +73,6 @@
     bigPictureSection.classList.add('hidden');
     document.removeEventListener('keydown', openPreviewPressEscHandler);
     commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-    commentsLoader.removeEventListener('keydown', commentsLoaderPressEnterHandler);
     picturesContainer.addEventListener('click', closePreviewClickHandler);
     picturesContainer.addEventListener('keydown', closePreviewPressEnterHandler);
   };
@@ -137,12 +129,10 @@
     if (publication.comments.length < FINISH_COUNT) {
       window.utils.hideElement(commentsLoader);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-      commentsLoader.removeEventListener('keydown', commentsLoaderPressEnterHandler);
       commentsCounter.textContent = publication.comments.length + ' из ' + publication.comments.length + ' комментариев';
     } else {
       window.utils.showElement(commentsLoader);
       commentsLoader.addEventListener('click', commentsLoaderClickHandler);
-      commentsLoader.addEventListener('keydown', commentsLoaderPressEnterHandler);
       commentsCounter.textContent = '5 из ' + commentsCount.textContent + ' комментариев';
     }
 
