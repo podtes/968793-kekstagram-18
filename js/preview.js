@@ -18,28 +18,7 @@
   var commentsForRender = [];
 
 
-
-
-  var commentsLoaderPressEnterHandler = function (evt) {
-    if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target === commentsLoader) {
-      console.log('more comments!');
-    }
-  };
-
-
-
-
-  var openPreviewPressEscHandler = function (evt) {
-    if (evt.keyCode === window.form.ESC_KEYCODE) {
-      bigPictureSection.classList.add('hidden');
-      removeEventListener('keydown', openPreviewPressEscHandler);
-    }
-    commentsLoader.removeEventListener('keydown', commentsLoaderPressEnterHandler);
-    commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-    picturesContainer.addEventListener('click', closePreviewClickHandler);
-    picturesContainer.addEventListener('keydown', closePreviewPressEnterHandler);
-  };
-  var commentsLoaderClickHandler = function () {
+  var showMoreComments = function () {
     var notRenderedElemensLeft = window.preview.publicationData.comments.length - FINISH_COUNT;
     if (notRenderedElemensLeft > 5) {
       START_COUNT += 5;
@@ -54,6 +33,26 @@
       window.utils.hideElement(commentsLoader);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
       commentsLoader.removeEventListener('keydown', commentsLoaderPressEnterHandler);
+    }
+  };
+
+  var openPreviewPressEscHandler = function (evt) {
+    if (evt.keyCode === window.form.ESC_KEYCODE) {
+      bigPictureSection.classList.add('hidden');
+      removeEventListener('keydown', openPreviewPressEscHandler);
+      commentsLoader.removeEventListener('keydown', commentsLoaderPressEnterHandler);
+      commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
+    }
+    picturesContainer.addEventListener('click', closePreviewClickHandler);
+    picturesContainer.addEventListener('keydown', closePreviewPressEnterHandler);
+  };
+  var commentsLoaderClickHandler = function () {
+    showMoreComments();
+  };
+  var commentsLoaderPressEnterHandler = function (evt) {
+    if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target === commentsLoader) {
+      // showMoreComments();
+      console.log('kek!');
     }
   };
   var closePreviewClickHandler = function (evt) {
