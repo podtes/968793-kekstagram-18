@@ -173,8 +173,6 @@
       scaleControlValueInNumber = scaleControlValueInNumber + SCALE_STEP;
       scaleControlValue.value = scaleControlValueInNumber + '%';
       postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / 100 + ')';
-    } else {
-      scaleControlValueInNumber = scaleControlValueInNumber;
     }
   };
   var scalePostImagePreviewSmaller = function () {
@@ -183,8 +181,6 @@
       scaleControlValueInNumber = scaleControlValueInNumber - SCALE_STEP;
       scaleControlValue.value = scaleControlValueInNumber + '%';
       postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / 100 + ')';
-    } else {
-      scaleControlValueInNumber = scaleControlValueInNumber;
     }
   };
 

@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var errorWindow = window.data.errorWindowTemplate.cloneNode(true);
+  var errorButtons = document.querySelectorAll('.error__button');
 
   /**
    * @param {[]} buttons коллекция кнопок
@@ -12,13 +14,9 @@
     }
   };
 
-  var errorWindow = window.data.errorWindowTemplate.cloneNode(true);
-
   window.error.showWindow = function () {
     window.form.closeEditor();
     document.querySelector('main').appendChild(errorWindow);
-
-    var errorButtons = document.querySelectorAll('.error__button');
 
     var deleteErrorWindowAndListenersHandler = function () {
       errorWindow.parentNode.removeChild(errorWindow);

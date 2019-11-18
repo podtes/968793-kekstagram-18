@@ -39,7 +39,6 @@
     if (evt.keyCode === window.form.ESC_KEYCODE) {
       bigPictureSection.classList.add('hidden');
       removeEventListener('keydown', openPreviewPressEscHandler);
-      // commentsLoader.removeEventListener('keydown', commentsLoaderPressEnterHandler);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
     }
     picturesContainer.addEventListener('click', closePreviewClickHandler);
