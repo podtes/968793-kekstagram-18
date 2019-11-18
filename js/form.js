@@ -55,7 +55,7 @@
       document.addEventListener('keydown', openEditorPressEscHandler);
     });
     window.preview.picturesContainer.removeEventListener('keydown', window.preview.closePreviewPressEnterHandler);
-    window.preview.picturesContainer.removeEventListener('keydown', window.preview.openPreviewPressEscHandler);
+    window.preview.picturesContainer.addEventListener('keydown', window.preview.openPreviewPressEscHandler);
   };
   var closeEditor = function () {
     imageEditorSection.classList.add('hidden');
