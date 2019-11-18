@@ -22,16 +22,6 @@
     }
     commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
   };
-  var openPreview = function () {
-    bigPictureSection.classList.remove('.hidden');
-    document.addEventListener('keydown', openPreviewPressEscHandler);
-  };
-  var closePreview = function () {
-    bigPictureSection.classList.add('hidden');
-    document.removeEventListener('keydown', openPreviewPressEscHandler);
-    commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-  };
-
   var commentsLoaderClickHandler = function () {
     var notRenderedElemensLeft = window.preview.publicationData.comments.length - finishCount;
     if (notRenderedElemensLeft > 5) {
@@ -47,6 +37,44 @@
       window.utils.hideElement(commentsLoader);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
     }
+  };
+  var openPreview = function () {
+    bigPictureSection.classList.remove('hidden');
+    document.addEventListener('keydown', openPreviewPressEscHandler);
+  };
+  var closePreview = function () {
+    bigPictureSection.classList.add('hidden');
+    document.removeEventListener('keydown', openPreviewPressEscHandler);
+    commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
+  };
+
+  /**
+   * @param {Publication} publication
+   * @param {number} startCount
+   * @param {number} finishCount
+   * return {void}
+   */
+  var getArrayForRenderComments = function (publication, startCount, finishCount) {
+    commentsForRender = publication.comments.slice(startCount, finishCount);
+  };
+
+  /**
+   *
+   * @param {Publication} publication
+   * @param {number} startCount
+   * @param {number} finishCount
+   */
+  var createAndRenderCommentHtmlElements = function (publication, startCount, finishCount) {
+    getArrayForRenderComments(publication, startCount, finishCount);
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < commentsForRender.length; i++) {
+      var newComment = commentListItem.cloneNode(true);
+      newComment.querySelector('.social__picture').src = commentsForRender[i].avatar;
+      newComment.querySelector('.social__picture').alt = commentsForRender[i].name;
+      newComment.querySelector('.social__text').textContent = commentsForRender[i].message;
+      fragment.appendChild(newComment);
+    }
+    commentList.appendChild(fragment);
   };
 
   /**
@@ -85,32 +113,14 @@
     };
   };
 
-  var getArrayForRenderComments = function (publication, startCount, finishCount) {
-    commentsForRender = publication.comments.slice(startCount, finishCount);
-  };
-  var createAndRenderCommentHtmlElements = function (publication, startCount, finishCount) {
-    getArrayForRenderComments(publication, startCount, finishCount);
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < commentsForRender.length; i++) {
-      var newComment = commentListItem.cloneNode(true);
-      newComment.querySelector('.social__picture').src = commentsForRender[i].avatar;
-      newComment.querySelector('.social__picture').alt = commentsForRender[i].name;
-      newComment.querySelector('.social__text').textContent = commentsForRender[i].message;
-      fragment.appendChild(newComment);
-    }
-    commentList.appendChild(fragment);
-  };
-
-
   /**
    * Функция показывает слой с полноразмерной картинкой по превью которой кликнул пользователь
    * @param {[]} publicationsArr массив с данными, из которых формируются публикации
    * @return {void}
    */
-  var showActivePublicationHtmlElement = function (publicationsArr) {
+  window.showActivePublicationHtmlElement = function (publicationsArr) {
     picturesContainer.addEventListener('click', function (evt) {
       if (evt.target.classList.contains('picture__img') && evt.target.dataset.id !== undefined) {
-        bigPictureSection.classList.remove('hidden');
         openPreview();
         renderActivePublicationHtmlElement(publicationsArr[evt.target.dataset.id]);
       } else {
