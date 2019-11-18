@@ -11,6 +11,7 @@
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
         onSuccess();
+        window.form.imageEditorForm.reset();
       } else {
         window.error.showWindow();
       }

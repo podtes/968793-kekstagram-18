@@ -32,14 +32,13 @@
   var scaleControlBiggerButton = imageEditorForm.querySelector('.scale__control--bigger');
   var scaleControlValue = imageEditorForm.querySelector('.scale__control--value');
 
-
   var openEditorPressEscHandler = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      imageEditorSection.classList.add('hidden');
-      uploadFileOpen.value = '';
+      closeEditor();
     }
   };
   var openEditor = function () {
+    window.preview.picturesContainer.removeEventListener('keydown', window.preview.closePreviewPressEnterHandler);
     imageEditorSection.classList.remove('hidden');
     effectLevel.classList.add('hidden');
     document.addEventListener('keydown', openEditorPressEscHandler);
@@ -57,9 +56,11 @@
     });
   };
   var closeEditor = function () {
-    imageEditorSection.classList.add('hidden');
     clearEffectsAndClassnameProperties();
+    imageEditorSection.classList.add('hidden');
     document.removeEventListener('keydown', openEditorPressEscHandler);
+    window.preview.picturesContainer.addEventListener('click', window.preview.closePreviewClickHandler);
+    window.preview.picturesContainer.addEventListener('keydown', window.preview.closePreviewPressEnterHandler);
   };
 
   /**
@@ -71,6 +72,7 @@
   };
 
   var clearEffectsAndClassnameProperties = function () {
+    uploadFileOpen.value = '';
     scaleControlValue.value = '100%';
     effectLevelValue.value = 100;
     effectLevelDepth.style.width = '100%';
