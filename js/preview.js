@@ -156,6 +156,7 @@
     closePreview: closePreview,
     closePreviewClickHandler: closePreviewClickHandler,
     closePreviewPressEnterHandler: closePreviewPressEnterHandler,
+    openPreviewPressEscHandler: openPreviewPressEscHandler,
     picturesContainer: picturesContainer
   };
 
