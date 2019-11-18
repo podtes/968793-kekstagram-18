@@ -144,18 +144,25 @@
     var hashtags = hashtagsInput.value.split(' ');
     if (hashtagsInput.value === '') {
       hashtagsInput.setCustomValidity('');
+      hashtagsInput.style.removeProperty('border');
     } else if (!isCountOfHashtagsValid(hashtags)) {
       hashtagsInput.setCustomValidity('Максимальное число хэштегов - 5');
+      hashtagsInput.style.border = '3px solid red';
     } else if (!isRepeatHashtagsValid(hashtags)) {
       hashtagsInput.setCustomValidity('Хэштеги не должны повторяться');
+      hashtagsInput.style.border = '3px solid red';
     } else if (!isFirstCharacterOfHashtagsValid(hashtags)) {
       hashtagsInput.setCustomValidity('Хэштег должен начинаться с символа # и не состоять только из #');
+      hashtagsInput.style.border = '3px solid red';
     } else if (!isLengthOfHashtagValid(hashtags)) {
       hashtagsInput.setCustomValidity('Максимальная длина хэштега - 20 символов');
+      hashtagsInput.style.border = '3px solid red';
     } else if (!isHashInWordsValid(hashtags)) {
       hashtagsInput.setCustomValidity('хэштеги должны разделяться пробелами');
+      hashtagsInput.style.border = '3px solid red';
     } else {
       hashtagsInput.setCustomValidity('');
+      hashtagsInput.style.removeProperty('border');
     }
   };
 
