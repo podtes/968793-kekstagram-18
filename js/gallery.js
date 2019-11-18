@@ -28,7 +28,7 @@
       fragment.appendChild(generatePublicationHtmlElement(publicationsArr[i], i));
     }
     document.querySelector('.pictures').appendChild(fragment);
-    window.preview.showActivePublicationHtmlElement(publicationsArr);
+    window.showActivePublicationHtmlElement(publicationsArr);
   };
 
   /**
