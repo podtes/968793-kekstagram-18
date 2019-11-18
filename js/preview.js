@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var START_COUNT = 0;
+  var FINISH_COUNT = 5;
+
   var bigPictureSection = document.querySelector('.big-picture');
   var bigPicture = bigPictureSection.querySelector('.big-picture__img');
   var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
@@ -13,30 +16,48 @@
   var bigPictureClose = bigPictureSection.querySelector('.big-picture__cancel');
   var picturesContainer = document.querySelector('.pictures');
   var commentsForRender = [];
-  var startCount = 0;
-  var finishCount = 5;
 
   var openPreviewPressEscHandler = function (evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
       bigPictureSection.classList.add('hidden');
     }
     commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
+    document.removeEventListener('keydown', openPreviewPressEscHandler);
+    picturesContainer.addEventListener('click', closePreviewClickHandler);
+    picturesContainer.addEventListener('keydown', closePreviewPressEnterHandler);
   };
   var commentsLoaderClickHandler = function () {
-    var notRenderedElemensLeft = window.preview.publicationData.comments.length - finishCount;
+    var notRenderedElemensLeft = window.preview.publicationData.comments.length - FINISH_COUNT;
     if (notRenderedElemensLeft > 5) {
-      startCount += 5;
-      finishCount += 5;
-      commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
-      createAndRenderCommentHtmlElements(window.preview.publicationData, startCount, finishCount);
+      START_COUNT += 5;
+      FINISH_COUNT += 5;
+      commentsCounter.textContent = FINISH_COUNT + ' из ' + commentsCount.textContent + ' комментариев';
+      createAndRenderCommentHtmlElements(window.preview.publicationData, START_COUNT, FINISH_COUNT);
     } else if (notRenderedElemensLeft >= 0) {
-      startCount += 5;
-      finishCount += notRenderedElemensLeft;
-      commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
-      createAndRenderCommentHtmlElements(window.preview.publicationData, startCount, finishCount);
+      START_COUNT += 5;
+      FINISH_COUNT += notRenderedElemensLeft;
+      commentsCounter.textContent = FINISH_COUNT + ' из ' + commentsCount.textContent + ' комментариев';
+      createAndRenderCommentHtmlElements(window.preview.publicationData, START_COUNT, FINISH_COUNT);
       window.utils.hideElement(commentsLoader);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
     }
+  };
+  var closePreviewClickHandler = function (evt) {
+    if (evt.target.classList.contains('picture__img') && evt.target.dataset.id !== undefined) {
+      openPreview();
+      renderActivePublicationHtmlElement(window.publications[evt.target.dataset.id]);
+    } else {
+      evt.stopPropagation();
+    }
+    picturesContainer.removeEventListener('click', closePreviewClickHandler);
+  };
+  var closePreviewPressEnterHandler = function (evt) {
+    if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target.children[0].classList.contains('picture__img') && evt.target.children[0].dataset.id !== undefined) {
+      bigPictureSection.classList.remove('hidden');
+      renderActivePublicationHtmlElement(window.publications[evt.target.children[0].dataset.id]);
+      openPreview();
+    }
+    picturesContainer.removeEventListener('click', closePreviewPressEnterHandler);
   };
   var openPreview = function () {
     bigPictureSection.classList.remove('hidden');
@@ -46,6 +67,8 @@
     bigPictureSection.classList.add('hidden');
     document.removeEventListener('keydown', openPreviewPressEscHandler);
     commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
+    picturesContainer.addEventListener('click', closePreviewClickHandler);
+    picturesContainer.addEventListener('keydown', closePreviewPressEnterHandler);
   };
 
   /**
@@ -83,8 +106,8 @@
   * @return {void}
   */
   var renderActivePublicationHtmlElement = function (publication) {
-    startCount = 0;
-    finishCount = 5;
+    START_COUNT = 0;
+    FINISH_COUNT = 5;
     window.utils.showElement(commentsLoader);
 
     while (commentList.firstChild) {
@@ -96,7 +119,7 @@
     pictureDescription.textContent = publication.description;
     commentsCount.textContent = publication.comments.length;
 
-    if (publication.comments.length < finishCount) {
+    if (publication.comments.length < FINISH_COUNT) {
       window.utils.hideElement(commentsLoader);
       commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
       commentsCounter.textContent = publication.comments.length + ' из ' + publication.comments.length + ' комментариев';
@@ -106,7 +129,7 @@
       commentsCounter.textContent = '5 из ' + commentsCount.textContent + ' комментариев';
     }
 
-    createAndRenderCommentHtmlElements(publication, startCount, finishCount);
+    createAndRenderCommentHtmlElements(publication, START_COUNT, FINISH_COUNT);
 
     window.preview = {
       publicationData: publication
@@ -119,22 +142,10 @@
    * @return {void}
    */
   window.showActivePublicationHtmlElement = function (publicationsArr) {
-    picturesContainer.addEventListener('click', function (evt) {
-      if (evt.target.classList.contains('picture__img') && evt.target.dataset.id !== undefined) {
-        openPreview();
-        renderActivePublicationHtmlElement(publicationsArr[evt.target.dataset.id]);
-      } else {
-        evt.stopPropagation();
-      }
-    });
+    picturesContainer.addEventListener('click', closePreviewClickHandler);
+    picturesContainer.addEventListener('keydown', closePreviewPressEnterHandler);
 
-    picturesContainer.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target.children[0].classList.contains('picture__img') && evt.target.children[0].dataset.id !== undefined) {
-        bigPictureSection.classList.remove('hidden');
-        renderActivePublicationHtmlElement(publicationsArr[evt.target.children[0].dataset.id]);
-        openPreview();
-      }
-    });
+    window.publications = publicationsArr;
   };
 
 
