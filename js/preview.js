@@ -66,10 +66,12 @@
     }
   };
   var openPreview = function () {
+    document.body.classList.add('modal-open');
     bigPictureSection.classList.remove('hidden');
     document.addEventListener('keydown', openPreviewPressEscHandler);
   };
   var closePreview = function () {
+    document.body.classList.remove('modal-open');
     bigPictureSection.classList.add('hidden');
     document.removeEventListener('keydown', openPreviewPressEscHandler);
     commentsLoader.removeEventListener('click', commentsLoaderClickHandler);

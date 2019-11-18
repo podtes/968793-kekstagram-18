@@ -142,7 +142,9 @@
   var validateHashtagsInput = function () {
     hashtagsInput.setCustomValidity('');
     var hashtags = hashtagsInput.value.split(' ');
-    if (!isCountOfHashtagsValid(hashtags)) {
+    if (hashtagsInput.value === '') {
+      hashtagsInput.setCustomValidity('');
+    } else if (!isCountOfHashtagsValid(hashtags)) {
       hashtagsInput.setCustomValidity('Максимальное число хэштегов - 5');
     } else if (!isRepeatHashtagsValid(hashtags)) {
       hashtagsInput.setCustomValidity('Хэштеги не должны повторяться');
