@@ -32,7 +32,6 @@
   var scaleControlBiggerButton = imageEditorForm.querySelector('.scale__control--bigger');
   var scaleControlValue = imageEditorForm.querySelector('.scale__control--value');
 
-
   var openEditorPressEscHandler = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeEditor();
@@ -57,8 +56,8 @@
     });
   };
   var closeEditor = function () {
-    imageEditorSection.classList.add('hidden');
     clearEffectsAndClassnameProperties();
+    imageEditorSection.classList.add('hidden');
     document.removeEventListener('keydown', openEditorPressEscHandler);
     window.preview.picturesContainer.addEventListener('click', window.preview.closePreviewClickHandler);
     window.preview.picturesContainer.addEventListener('keydown', window.preview.closePreviewPressEnterHandler);
