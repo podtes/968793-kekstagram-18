@@ -20,9 +20,9 @@
   var openPreviewPressEscHandler = function (evt) {
     if (evt.keyCode === window.form.ESC_KEYCODE) {
       bigPictureSection.classList.add('hidden');
+      removeEventListener('keydown', openPreviewPressEscHandler);
     }
     commentsLoader.removeEventListener('click', commentsLoaderClickHandler);
-    document.removeEventListener('keydown', openPreviewPressEscHandler);
     picturesContainer.addEventListener('click', closePreviewClickHandler);
     picturesContainer.addEventListener('keydown', closePreviewPressEnterHandler);
   };
@@ -52,7 +52,7 @@
     }
   };
   var closePreviewPressEnterHandler = function (evt) {
-    if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target.children[0].classList.contains('picture__img') && evt.target.children[0].dataset.id !== undefined) {
+    if (evt.keyCode === window.form.ENTER_KEYCODE && evt.target.children[0] && evt.target.children[0].dataset.id !== undefined) {
       bigPictureSection.classList.remove('hidden');
       openPreview();
       renderActivePublicationHtmlElement(window.preview.publications[evt.target.children[0].dataset.id]);

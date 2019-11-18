@@ -39,6 +39,7 @@
     }
   };
   var openEditor = function () {
+    window.preview.picturesContainer.removeEventListener('keydown', window.preview.closePreviewPressEnterHandler);
     imageEditorSection.classList.remove('hidden');
     effectLevel.classList.add('hidden');
     document.addEventListener('keydown', openEditorPressEscHandler);
@@ -54,8 +55,6 @@
     hashtagsInput.addEventListener('blur', function () {
       document.addEventListener('keydown', openEditorPressEscHandler);
     });
-    window.preview.picturesContainer.removeEventListener('keydown', window.preview.closePreviewPressEnterHandler);
-    window.preview.picturesContainer.addEventListener('keydown', window.preview.openPreviewPressEscHandler);
   };
   var closeEditor = function () {
     imageEditorSection.classList.add('hidden');
