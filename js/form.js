@@ -95,11 +95,7 @@
 
   // описание валидации для поля ввода хэштегов
   var isCountOfHashtagsValid = function (hashtags) {
-    if (hashtags.length > HASHTAGS_MAX) {
-      return false;
-    } else {
-      return true;
-    }
+    return hashtags.length > HASHTAGS_MAX;
   };
   var isFirstCharacterOfHashtagsValid = function (hashtags) {
     if (hashtags.length >= 1) {
@@ -144,7 +140,7 @@
     if (hashtagsInput.value === '') {
       hashtagsInput.setCustomValidity('');
       hashtagsInput.style.removeProperty('border');
-    } else if (!isCountOfHashtagsValid(hashtags)) {
+    } else if (isCountOfHashtagsValid(hashtags)) {
       hashtagsInput.setCustomValidity('Максимальное число хэштегов - 5');
       hashtagsInput.style.border = '3px solid red';
     } else if (!isRepeatHashtagsValid(hashtags)) {
@@ -189,11 +185,7 @@
    * @return {boolean}
    */
   var isAppliedEffect = function (effectName) {
-    if (postImagePreview.children[0].className === 'effects__preview--' + effectName) {
-      return true;
-    } else {
-      return false;
-    }
+    return postImagePreview.children[0].className === 'effects__preview--' + effectName;
   };
 
   // применение фильтра к превью в редакторе, исходя из значения класса
