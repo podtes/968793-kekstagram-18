@@ -10,6 +10,8 @@
   var INVERT_MAX_VALUE = 100;
   var PHOBOS_AND_HEAT_MAX_VALUE = 3;
   var DEFAULT_EFFECT_VALUE = 100;
+  var MAX_VALUE_TO_SCALE_STEP_BIGGER = 75;
+  var MAX_VALUE_TO_SCALE_STEP_SMALLER = 50;
 
   var uploadFileOpen = document.querySelector('#upload-file');
   var uploadFileClose = document.querySelector('#upload-cancel');
@@ -166,7 +168,7 @@
   // масштабирование превью картинки в редакторе
   var scalePostImagePreviewBigger = function () {
     var scaleControlValueInNumber = +scaleControlValue.value.slice(0, -1);
-    if (scaleControlValueInNumber <= 75) {
+    if (scaleControlValueInNumber <= MAX_VALUE_TO_SCALE_STEP_BIGGER) {
       scaleControlValueInNumber = scaleControlValueInNumber + SCALE_STEP;
       scaleControlValue.value = scaleControlValueInNumber + '%';
       postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / 100 + ')';
@@ -174,7 +176,7 @@
   };
   var scalePostImagePreviewSmaller = function () {
     var scaleControlValueInNumber = +scaleControlValue.value.slice(0, -1);
-    if (scaleControlValueInNumber >= 50) {
+    if (scaleControlValueInNumber >= MAX_VALUE_TO_SCALE_STEP_SMALLER) {
       scaleControlValueInNumber = scaleControlValueInNumber - SCALE_STEP;
       scaleControlValue.value = scaleControlValueInNumber + '%';
       postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / 100 + ')';

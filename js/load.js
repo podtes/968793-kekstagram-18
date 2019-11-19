@@ -2,13 +2,15 @@
 
 (function () {
   var URL = 'https://js.dump.academy/kekstagram/data';
+  var SUCCESS_STATUS = 200;
+  var TIMEOUT_TIME = 10000;
 
   window.loadPublications = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === SUCCESS_STATUS) {
         onSuccess(xhr.response);
         window.filters.show();
 
@@ -39,9 +41,15 @@
       onError();
     });
 
-    xhr.timeout = 10000; // 10s
+    xhr.timeout = TIMEOUT_TIME;
 
     xhr.open('GET', URL);
     xhr.send();
   };
+
+  window.load = {
+    SUCCESS_STATUS: SUCCESS_STATUS,
+    TIMEOUT_TIME: TIMEOUT_TIME
+  };
+
 })();

@@ -9,7 +9,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === window.load.SUCCESS_STATUS) {
         onSuccess();
         window.form.imageEditorForm.reset();
       } else {
@@ -25,7 +25,7 @@
       window.error.showWindow();
     });
 
-    xhr.timeout = 10000;
+    xhr.timeout = window.load.TIMEOUT_TIME;
 
     xhr.open('POST', URL);
     xhr.send(data);

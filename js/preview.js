@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var COMMENTS_TO_RENDER = 5;
+
   var bigPictureSection = document.querySelector('.big-picture');
   var bigPicture = bigPictureSection.querySelector('.big-picture__img');
   var commentsCounter = bigPictureSection.querySelector('.social__comment-count');
@@ -19,13 +21,13 @@
 
   var showMoreComments = function () {
     var notRenderedElemensLeft = window.preview.publicationData.comments.length - finishCount;
-    if (notRenderedElemensLeft > 5) {
-      startCount += 5;
-      finishCount += 5;
+    if (notRenderedElemensLeft > COMMENTS_TO_RENDER) {
+      startCount += COMMENTS_TO_RENDER;
+      finishCount += COMMENTS_TO_RENDER;
       commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
       createAndRenderCommentHtmlElements(window.preview.publicationData, startCount, finishCount);
     } else if (notRenderedElemensLeft >= 0) {
-      startCount += 5;
+      startCount += COMMENTS_TO_RENDER;
       finishCount += notRenderedElemensLeft;
       commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
       createAndRenderCommentHtmlElements(window.preview.publicationData, startCount, finishCount);
