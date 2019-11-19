@@ -72,7 +72,6 @@
   };
 
   var clearEffectsAndClassnameProperties = function () {
-    uploadFileOpen.value = '';
     scaleControlValue.value = '100%';
     effectLevelValue.value = 100;
     effectLevelDepth.style.width = '100%';
