@@ -16,7 +16,7 @@
   var picturesContainer = document.querySelector('.pictures');
   var commentsForRender = [];
   var startCount = 0;
-  var finishCount = 5;
+  var finishCount = COMMENTS_TO_RENDER;
 
 
   var showMoreComments = function () {
@@ -81,21 +81,18 @@
 
   /**
    * @param {Publication} publication
-   * @param {number} startCount
-   * @param {number} finishCount
    * return {void}
    */
-  var getArrayForRenderComments = function (publication, startCount, finishCount) {
+  var getArrayForRenderComments = function (publication) {
     commentsForRender = publication.comments.slice(startCount, finishCount);
   };
 
   /**
    *
    * @param {Publication} publication
-   * @param {number} startCount
-   * @param {number} finishCount
+   * return {void}
    */
-  var createAndRenderCommentHtmlElements = function (publication, startCount, finishCount) {
+  var createAndRenderCommentHtmlElements = function (publication) {
     getArrayForRenderComments(publication, startCount, finishCount);
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < commentsForRender.length; i++) {
