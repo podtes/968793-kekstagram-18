@@ -59,7 +59,9 @@
     });
   };
   var closeEditor = function () {
+    scaleControlValue.value = '100%';
     uploadFileOpen.value = '';
+    postImagePreview.children[0].style.transform = 'scale(1)';
     clearEffectsAndClassnameProperties();
     imageEditorSection.classList.add('hidden');
     document.removeEventListener('keydown', openEditorPressEscHandler);
@@ -76,13 +78,11 @@
   };
 
   var clearEffectsAndClassnameProperties = function () {
-    scaleControlValue.value = '100%';
     effectLevelValue.value = DEFAULT_EFFECT_VALUE;
     effectLevelDepth.style.width = '100%';
     effectLevelPin.style.left = '100%';
     postImagePreview.children[0].style.filter = '';
     postImagePreview.children[0].className = '';
-    postImagePreview.children[0].style.transform = 'scale(1)';
   };
 
   /**
