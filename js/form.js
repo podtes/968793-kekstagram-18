@@ -10,8 +10,8 @@
   var INVERT_MAX_VALUE = 100;
   var PHOBOS_AND_HEAT_MAX_VALUE = 3;
 
-  var uploadFileOpen = document.getElementById('upload-file');
-  var uploadFileClose = document.getElementById('upload-cancel');
+  var uploadFileOpen = document.querySelector('#upload-file');
+  var uploadFileClose = document.querySelector('#upload-cancel');
   var imageEditorSection = document.querySelector('.img-upload__overlay');
   var imageEditorForm = document.querySelector('.img-upload__form');
   var postImagePreview = imageEditorForm.querySelector('.img-upload__preview');

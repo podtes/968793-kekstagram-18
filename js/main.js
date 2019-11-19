@@ -15,7 +15,7 @@
     window.form.effectLevel.classList.add('hidden');
     window.form.clearEffectsAndClassnameProperties();
   });
-  document.getElementById('effect-none').addEventListener('focus', function () {
+  document.querySelector('#effect-none').addEventListener('focus', function () {
     window.form.effectLevel.classList.add('hidden');
     window.form.clearEffectsAndClassnameProperties();
   });
@@ -24,7 +24,7 @@
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('chrome');
   });
-  document.getElementById('effect-chrome').addEventListener('focus', function () {
+  document.querySelector('#effect-chrome').addEventListener('focus', function () {
     window.form.effectLevel.classList.remove('hidden');
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('chrome');
@@ -34,7 +34,7 @@
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('sepia');
   });
-  document.getElementById('effect-sepia').addEventListener('focus', function () {
+  document.querySelector('#effect-sepia').addEventListener('focus', function () {
     window.form.effectLevel.classList.remove('hidden');
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('sepia');
@@ -44,7 +44,7 @@
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('marvin');
   });
-  document.getElementById('effect-marvin').addEventListener('focus', function () {
+  document.querySelector('#effect-marvin').addEventListener('focus', function () {
     window.form.effectLevel.classList.remove('hidden');
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('marvin');
@@ -54,7 +54,7 @@
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('phobos');
   });
-  document.getElementById('effect-phobos').addEventListener('focus', function () {
+  document.querySelector('#effect-phobos').addEventListener('focus', function () {
     window.form.effectLevel.classList.remove('hidden');
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('phobos');
@@ -64,7 +64,7 @@
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('heat');
   });
-  document.getElementById('effect-heat').addEventListener('focus', function () {
+  document.querySelector('#effect-heat').addEventListener('focus', function () {
     window.form.effectLevel.classList.remove('hidden');
     window.form.clearEffectsAndClassnameProperties();
     window.form.addEffectToImagePreview('heat');

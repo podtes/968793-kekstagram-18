@@ -2,9 +2,9 @@
 
 (function () {
   var filters = document.querySelector('.img-filters');
-  var popularPublicationsButton = document.getElementById('filter-popular');
-  var randomPublicationsButton = document.getElementById('filter-random');
-  var discussedPublicationsButton = document.getElementById('filter-discussed');
+  var popularPublicationsButton = document.querySelector('#filter-popular');
+  var randomPublicationsButton = document.querySelector('#filter-random');
+  var discussedPublicationsButton = document.querySelector('#filter-discussed');
 
   var show = function () {
     filters.classList.remove('img-filters--inactive');
