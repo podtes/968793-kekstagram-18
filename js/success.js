@@ -2,11 +2,11 @@
 
 (function () {
   var successWindow = window.data.successWindowTemplate.cloneNode(true);
-  var successButton = document.querySelector('.success__button');
 
   window.success.showWindow = function () {
     window.form.closeEditor();
     document.querySelector('main').appendChild(successWindow);
+    var successButton = document.querySelector('.success__button');
 
     var deleteSuccessWindowAndListenersHandler = function () {
       successWindow.parentNode.removeChild(successWindow);
