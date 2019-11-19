@@ -36,7 +36,6 @@
   var openEditorPressEscHandler = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeEditor();
-      uploadFileOpen.value = '';
     }
   };
   var openEditor = function () {
@@ -58,6 +57,7 @@
     });
   };
   var closeEditor = function () {
+    uploadFileOpen.value = '';
     clearEffectsAndClassnameProperties();
     imageEditorSection.classList.add('hidden');
     document.removeEventListener('keydown', openEditorPressEscHandler);
