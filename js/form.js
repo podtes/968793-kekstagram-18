@@ -9,6 +9,7 @@
   var CHROME_AND_SEPIA_MAX_VALUE = 1;
   var INVERT_MAX_VALUE = 100;
   var PHOBOS_AND_HEAT_MAX_VALUE = 3;
+  var DEFAULT_EFFECT_VALUE = 100;
 
   var uploadFileOpen = document.querySelector('#upload-file');
   var uploadFileClose = document.querySelector('#upload-cancel');
@@ -35,6 +36,7 @@
   var openEditorPressEscHandler = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
       closeEditor();
+      uploadFileOpen.value = '';
     }
   };
   var openEditor = function () {
@@ -73,7 +75,7 @@
 
   var clearEffectsAndClassnameProperties = function () {
     scaleControlValue.value = '100%';
-    effectLevelValue.value = 100;
+    effectLevelValue.value = DEFAULT_EFFECT_VALUE;
     effectLevelDepth.style.width = '100%';
     effectLevelPin.style.left = '100%';
     postImagePreview.children[0].style.filter = '';
