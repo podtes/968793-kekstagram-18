@@ -85,8 +85,8 @@
         var shift = startCoordinateX - moveEvt.clientX;
         startCoordinateX = moveEvt.clientX;
         window.form.effectLevelPin.style.left = (window.form.effectLevelPin.offsetLeft - shift) + 'px';
-        window.form.effectLevelDepth.style.width = Math.round(100 * ((moveEvt.clientX - effectLevelLineStart) / effectLevelLineGeometricProperties.width)) + '%'; // заливка активного участка слайдера
-        window.form.effectLevelValue.value = Math.round(100 * (moveEvt.clientX - effectLevelLineStart) / effectLevelLineGeometricProperties.width);
+        window.form.effectLevelDepth.style.width = Math.round(window.form.MAX_PERCENT * ((moveEvt.clientX - effectLevelLineStart) / effectLevelLineGeometricProperties.width)) + '%'; // заливка активного участка слайдера
+        window.form.effectLevelValue.value = Math.round(window.form.MAX_PERCENT * (moveEvt.clientX - effectLevelLineStart) / effectLevelLineGeometricProperties.width);
         window.form.applyCssFilterToImagePreview();
       }
     };

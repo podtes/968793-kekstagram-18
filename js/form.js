@@ -12,6 +12,7 @@
   var DEFAULT_EFFECT_VALUE = 100;
   var MAX_VALUE_TO_SCALE_STEP_BIGGER = 75;
   var MIN_VALUE_TO_SCALE_STEP_SMALLER = 50;
+  var MAX_PERCENT = 100;
 
   var uploadFileOpen = document.querySelector('#upload-file');
   var uploadFileClose = document.querySelector('#upload-cancel');
@@ -173,7 +174,7 @@
     if (scaleControlValueInNumber <= MAX_VALUE_TO_SCALE_STEP_BIGGER) {
       scaleControlValueInNumber = scaleControlValueInNumber + SCALE_STEP;
       scaleControlValue.value = scaleControlValueInNumber + '%';
-      postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / 100 + ')';
+      postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / MAX_PERCENT + ')';
     }
   };
   var scalePostImagePreviewSmaller = function () {
@@ -181,7 +182,7 @@
     if (scaleControlValueInNumber >= MIN_VALUE_TO_SCALE_STEP_SMALLER) {
       scaleControlValueInNumber = scaleControlValueInNumber - SCALE_STEP;
       scaleControlValue.value = scaleControlValueInNumber + '%';
-      postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / 100 + ')';
+      postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / MAX_PERCENT + ')';
     }
   };
 
@@ -197,15 +198,15 @@
   // применение фильтра к превью в редакторе, исходя из значения класса
   var applyCssFilterToImagePreview = function () {
     if (isAppliedEffect('chrome')) {
-      postImagePreview.children[0].style.filter = 'grayscale(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + ')';
+      postImagePreview.children[0].style.filter = 'grayscale(' + CHROME_AND_SEPIA_MAX_VALUE / MAX_PERCENT * effectLevelValue.value + ')';
     } else if (isAppliedEffect('sepia')) {
-      postImagePreview.children[0].style.filter = 'sepia(' + CHROME_AND_SEPIA_MAX_VALUE / 100 * effectLevelValue.value + ')';
+      postImagePreview.children[0].style.filter = 'sepia(' + CHROME_AND_SEPIA_MAX_VALUE / MAX_PERCENT * effectLevelValue.value + ')';
     } else if (isAppliedEffect('marvin')) {
-      postImagePreview.children[0].style.filter = 'invert(' + INVERT_MAX_VALUE / 100 * effectLevelValue.value + '%)';
+      postImagePreview.children[0].style.filter = 'invert(' + INVERT_MAX_VALUE / MAX_PERCENT * effectLevelValue.value + '%)';
     } else if (isAppliedEffect('phobos')) {
-      postImagePreview.children[0].style.filter = 'blur(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + 'px)';
+      postImagePreview.children[0].style.filter = 'blur(' + PHOBOS_AND_HEAT_MAX_VALUE / MAX_PERCENT * effectLevelValue.value + 'px)';
     } else if (isAppliedEffect('heat')) {
-      postImagePreview.children[0].style.filter = 'brightness(' + PHOBOS_AND_HEAT_MAX_VALUE / 100 * effectLevelValue.value + ')';
+      postImagePreview.children[0].style.filter = 'brightness(' + PHOBOS_AND_HEAT_MAX_VALUE / MAX_PERCENT * effectLevelValue.value + ')';
     } else {
       postImagePreview.children[0].style.filter = '';
     }
@@ -240,7 +241,8 @@
     hashtagsInput: hashtagsInput,
     validateHashtagsInput: validateHashtagsInput,
     ENTER_KEYCODE: ENTER_KEYCODE,
-    ESC_KEYCODE: ESC_KEYCODE
+    ESC_KEYCODE: ESC_KEYCODE,
+    MAX_PERCENT: MAX_PERCENT
   };
 
 })();
