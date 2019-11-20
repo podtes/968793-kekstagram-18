@@ -11,7 +11,7 @@
   var PHOBOS_AND_HEAT_MAX_VALUE = 3;
   var DEFAULT_EFFECT_VALUE = 100;
   var MAX_VALUE_TO_SCALE_STEP_BIGGER = 75;
-  var MAX_VALUE_TO_SCALE_STEP_SMALLER = 50;
+  var MIN_VALUE_TO_SCALE_STEP_SMALLER = 50;
 
   var uploadFileOpen = document.querySelector('#upload-file');
   var uploadFileClose = document.querySelector('#upload-cancel');
@@ -62,7 +62,9 @@
     scaleControlValue.value = '100%';
     uploadFileOpen.value = '';
     postImagePreview.children[0].style.transform = 'scale(1)';
+    hashtagsInput.style.removeProperty('border');
     clearEffectsAndClassnameProperties();
+    imageEditorForm.reset();
     imageEditorSection.classList.add('hidden');
     document.removeEventListener('keydown', openEditorPressEscHandler);
     window.preview.picturesContainer.addEventListener('click', window.preview.closePreviewClickHandler);
@@ -176,7 +178,7 @@
   };
   var scalePostImagePreviewSmaller = function () {
     var scaleControlValueInNumber = +scaleControlValue.value.slice(0, -1);
-    if (scaleControlValueInNumber >= MAX_VALUE_TO_SCALE_STEP_SMALLER) {
+    if (scaleControlValueInNumber >= MIN_VALUE_TO_SCALE_STEP_SMALLER) {
       scaleControlValueInNumber = scaleControlValueInNumber - SCALE_STEP;
       scaleControlValue.value = scaleControlValueInNumber + '%';
       postImagePreview.children[0].style.transform = 'scale(' + scaleControlValueInNumber / 100 + ')';
