@@ -112,7 +112,7 @@
   */
   var renderActivePublicationHtmlElement = function (publication) {
     startCount = 0;
-    finishCount = 5;
+    finishCount = COMMENTS_TO_RENDER;
     window.preview.publicationData = publication;
     window.utils.showElement(commentsLoader);
 
@@ -132,7 +132,7 @@
     } else {
       window.utils.showElement(commentsLoader);
       commentsLoader.addEventListener('click', commentsLoaderClickHandler);
-      commentsCounter.textContent = '5 из ' + commentsCount.textContent + ' комментариев';
+      commentsCounter.textContent = finishCount + ' из ' + commentsCount.textContent + ' комментариев';
     }
 
     createAndRenderCommentHtmlElements(publication, startCount, finishCount);
